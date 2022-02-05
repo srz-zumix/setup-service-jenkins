@@ -2,9 +2,8 @@ name: PR test
 on: [pull_request]
 
 jobs:
-  cpplint:
+  setup-jenkins:
     runs-on: ubuntu-latest
-    environment: dockerhub
     services:
       jenkins:
         image: jenkins/jenkins:lts-jdk11
