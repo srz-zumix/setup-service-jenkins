@@ -33,7 +33,7 @@ runs:
     - name: Install Jenkins Plugins
       shell: bash
       run: |
-        "${GITHUB_ACTION_PATH}/setup-cli.sh" "${{ inputs.plugin_files }}"
+        "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugin_files }}"
 
 branding:
   icon: 'settings'
