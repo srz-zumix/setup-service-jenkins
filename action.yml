@@ -1,5 +1,5 @@
-name: 'setup services jenkins container'
-description: 'Setup services jenkins container.'
+name: 'setup services jenkins container and install jenkins-cli.jar'
+description: 'Setup services jenkins container and install jenkins-cli.jar.'
 author: 'srz_zumix'
 inputs:
   service_id:
@@ -23,11 +23,11 @@ runs:
           sleep 30; echo "waiting..."
         done
         docker logs "${{ inputs.service_id }}"
-    - name: Download CLI
+    - name: Setup CLI
       shell: bash
-      working-directory: ${{ runner.temp }}
-      run: |
-        curl -sSOL "http://localhost:${{ inputs.port }}/jnlpJars/jenkins-cli.jar"
+      env: 
+        JENKINS_URL: http://localhost:${{ inputs.port }}
+      run: "$GITHUB_ACTION_PATH/setup-cli.sh"
     - name: Install Jenkins Plugins
       shell: bash
       if: ${{ inputs.plugin_files }} != ""
@@ -38,19 +38,16 @@ runs:
     - name: Get session-id
       id: session-id
       shell: bash
-      working-directory: ${{ runner.temp }}
       run: |
         echo "##[set-output name=before;]$(java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id)"          
     - name: Restart Jenkins
       shell: bash
-      working-directory: ${{ runner.temp }}
       run: |
         java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" restart
     - name: Wait restart
       shell: bash
-      working-directory: ${{ runner.temp }}
       run: |
-        until java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id; do
+        until java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id 2>/dev/null; do
           sleep 30; echo "waiting..."
         done
         while java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id | grep "${{ steps.session-id.outputs.before }}"; do
