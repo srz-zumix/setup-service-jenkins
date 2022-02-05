@@ -30,9 +30,10 @@ runs:
         curl -sSOL "http://localhost:${{ inputs.port }}/jnlpJars/jenkins-cli.jar"
     - name: Install Jenkins Plugins
       shell: bash
+      if: ${{ inputs.plugin_files }} != ""
       run: |
         if [ -f "${{ inputs.plugin_files }}" ]; then
-          xargs -I{} java -jar "${{ runner.temp }}/jenkins-cli.jar" -s "http://localhost:${{ inputs.port }}" install-plugin {} < ${{ inputs.plugin_files }}
+          xargs -I{} java -jar "${{ runner.temp }}/jenkins-cli.jar" -s "http://localhost:${{ inputs.port }}" install-plugin {} < "${{ inputs.plugin_files }}"
         fi
     - name: Get session-id
       id: session-id
