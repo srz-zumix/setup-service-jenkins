@@ -27,30 +27,29 @@ runs:
       shell: bash
       env: 
         JENKINS_URL: http://localhost:${{ inputs.port }}
-      run: "$GITHUB_ACTION_PATH/setup-cli.sh"
+      run: "${GITHUB_ACTION_PATH}/setup-cli.sh"
     - name: Install Jenkins Plugins
       shell: bash
       if: ${{ inputs.plugin_files }} != ""
       run: |
         if [ -f "${{ inputs.plugin_files }}" ]; then
-          xargs -I{} java -jar "${{ runner.temp }}/jenkins-cli.jar" -s "http://localhost:${{ inputs.port }}" install-plugin {} < "${{ inputs.plugin_files }}"
+          xargs -I{} jenkins-cli install-plugin {} < "${{ inputs.plugin_files }}"
         fi
     - name: Get session-id
       id: session-id
       shell: bash
       run: |
-        echo "##[set-output name=before;]$(java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id)"          
+        echo "##[set-output name=before;]$(jenkins-cli session-id)"          
     - name: Restart Jenkins
       shell: bash
-      run: |
-        java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" restart
+      run: jenkins-cli restart
     - name: Wait restart
       shell: bash
       run: |
-        until java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id 2>/dev/null; do
+        until jenkins-cli session-id 2>/dev/null; do
           sleep 30; echo "waiting..."
         done
-        while java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id | grep "${{ steps.session-id.outputs.before }}"; do
+        while jenkins-cli session-id | grep "${{ steps.session-id.outputs.before }}"; do
           sleep 30; echo "waiting..."
         done
 
