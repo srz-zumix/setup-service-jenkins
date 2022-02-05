@@ -9,7 +9,7 @@ inputs:
     description: "jenkins service container port"
     default: '8080'
     required: false
-  pulgins_file:
+  plugin_files:
     description: "install plugin list file"
     default: ''
     required: false
@@ -31,8 +31,9 @@ runs:
     - name: Install Jenkins Plugins
       shell: bash
       run: |
-        xargs -I{} java -jar "${{ runner.temp }}/jenkins-cli.jar" -s "http://localhost:${{ inputs.port }}" install-plugin {} < ${{ inputs.pulgins_file }}
-      if: "${{ inputs.pulgins_file }} != ''"
+        if [ -f "${{ inputs.plugin_files }}" ]; then
+          xargs -I{} java -jar "${{ runner.temp }}/jenkins-cli.jar" -s "http://localhost:${{ inputs.port }}" install-plugin {} < ${{ inputs.plugin_files }}
+        fi
     - name: Get session-id
       id: session-id
       shell: bash
