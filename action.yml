@@ -17,29 +17,35 @@ runs:
   using: "composite"
   steps:
     - name: Wait Launch Jenkins
+      shell: bash
       run: |
         until docker logs "${{ inputs.service_id }}" 2>&1 | grep "Jenkins is fully up and running"; do
           sleep 30; echo "waiting..."
         done
         docker logs "${{ inputs.service_id }}"
     - name: Download CLI
+      shell: bash
       working-directory: ${{ runner.temp }}
       run: |
         curl -sSOL "http://localhost:${{ inputs.port }}/jnlpJars/jenkins-cli.jar"
     - name: Install Jenkins Plugins
+      shell: bash
       run: |
         xargs -I{} java -jar "${{ runner.temp }}/jenkins-cli.jar" -s "http://localhost:${{ inputs.port }}" install-plugin {} < ${{ inputs.pulgins_file }}
       if: "${{ inputs.pulgins_file }} != ''"
     - name: Get session-id
       id: session-id
+      shell: bash
       working-directory: ${{ runner.temp }}
       run: |
         echo "##[set-output name=before;]$(java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id)"          
     - name: Restart Jenkins
+      shell: bash
       working-directory: ${{ runner.temp }}
       run: |
         java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" restart
     - name: Wait restart
+      shell: bash
       working-directory: ${{ runner.temp }}
       run: |
         until java -jar jenkins-cli.jar -s "http://localhost:${{ inputs.port }}" session-id; do
