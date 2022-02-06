@@ -9,7 +9,7 @@ inputs:
     description: "jenkins service container port"
     default: '8080'
     required: false
-  plugin_files:
+  plugins_file:
     description: "install plugin list file"
     default: ''
     required: false
@@ -29,7 +29,7 @@ runs:
     - name: Install Jenkins Plugins
       shell: bash
       run: |
-        "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugin_files }}"
+        "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugins_file }}"
 
 branding:
   icon: 'settings'

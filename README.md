@@ -1,2 +1,48 @@
 # setup-service-jenkins
-setup github actions services jenkins container
+
+setup github actions services jenkins container and jenkins-cli wrapper
+
+## Inputs
+
+### `service_id`
+
+Required. Jenkins service container id.
+
+### `port`
+
+Optional. Jenkins service container port. Default is `8080`.
+
+### `plugins_file`
+
+Optional. Jenkins plugins file. Default is empty.
+
+## Example usage
+
+### [.github/workflows/pr_test.yml](.github/workflows/pr_test.yml)
+
+```yml
+name: PR test
+on: [pull_request]
+
+jobs:
+  setup-jenkins:
+    runs-on: ubuntu-latest
+    services:
+      jenkins:
+        image: jenkins/jenkins:lts-jdk11
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        env:
+          # disable setup wizard + JCasC load
+          JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/jenkins_home/casc_configs
+        ports:
+          - 8080:8080
+          - 50000:50000
+    steps:
+    - name: clone
+      uses: actions/checkout@v2
+    - uses: ./
+      with:
+        service_id: ${{ job.services.jenkins.id }}
+```
