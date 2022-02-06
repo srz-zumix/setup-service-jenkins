@@ -13,6 +13,10 @@ inputs:
     description: "install plugin list file"
     default: ''
     required: false
+  install_suggested_plugins:
+    description: "install suggested plugins"
+    default: false
+    required: false
 runs:
   using: "composite"
   steps:
@@ -26,10 +30,16 @@ runs:
         JENKINS_URL: http://localhost:${{ inputs.port }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-cli.sh"
+    - name: Install Jenkins Suggested Plugins
+      shell: bash
+      run: |
+        "${GITHUB_ACTION_PATH}/install-plugins.sh" "${GITHUB_ACTION_PATH}/resources/DefaultJenkinsPlugins.txt"
+      if: "inputs.install_suggested_plugins == 'true'"
     - name: Install Jenkins Plugins
       shell: bash
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugins_file }}"
+      if: "inputs.plugins_file != ''"
 
 branding:
   icon: 'settings'
