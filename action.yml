@@ -39,6 +39,7 @@ runs:
       shell: bash
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugins_file }}"
+      if: "inputs.plugins_file != ''"
 
 branding:
   icon: 'settings'
