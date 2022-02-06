@@ -1,0 +1,36 @@
+name: 'setup services jenkins container and install jenkins-cli.jar'
+description: 'Setup services jenkins container and install jenkins-cli.jar.'
+author: 'srz_zumix'
+inputs:
+  service_id:
+    description: "jenkins service container id"
+    required: true
+  port:
+    description: "jenkins service container port"
+    default: '8080'
+    required: false
+  plugin_files:
+    description: "install plugin list file"
+    default: ''
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Wait Launch Jenkins
+      shell: bash
+      run: |
+        "${GITHUB_ACTION_PATH}/wait-launch.sh" "${{ inputs.service_id }}"
+    - name: Setup CLI
+      shell: bash
+      env: 
+        JENKINS_URL: http://localhost:${{ inputs.port }}
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-cli.sh"
+    - name: Install Jenkins Plugins
+      shell: bash
+      run: |
+        "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugin_files }}"
+
+branding:
+  icon: 'settings'
+  color: 'yellow'

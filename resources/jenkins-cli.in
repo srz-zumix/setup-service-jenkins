@@ -1,0 +1,4 @@
+#!/bin/bash
+
+JENKINS_URL=@jenkins_url@
+java -jar @jenkins_cli_jar@ -s "${JENKINS_URL}" "$@"
