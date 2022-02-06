@@ -18,13 +18,7 @@ runs:
   steps:
     - name: Wait Launch Jenkins
       shell: bash
-      run: |
-        until docker logs "${{ inputs.service_id }}" 2>&1 | grep "Jenkins is fully up and running"; do
-          sleep 30; echo "waiting jenkins launch..."
-        done
-        echo '::group::jenkins docker log'
-        docker logs "${{ inputs.service_id }}"
-        echo '::endgroup::'
+      run: "${GITHUB_ACTION_PATH}/wait-launch.sh"
     - name: Setup CLI
       shell: bash
       env: 
