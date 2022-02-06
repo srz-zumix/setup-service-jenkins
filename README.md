@@ -16,6 +16,10 @@ Optional. Jenkins service container port. Default is `8080`.
 
 Optional. Jenkins plugins file. Default is empty.
 
+### `install_suggested_plugins`
+
+Optional. Install suggested plugins [true,false]. Default is false.
+
 ## Example usage
 
 ### [.github/workflows/pr_test.yml](.github/workflows/pr_test.yml)
