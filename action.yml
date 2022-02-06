@@ -34,7 +34,7 @@ runs:
       shell: bash
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${GITHUB_ACTION_PATH}/resources/DefaultJenkinsPlugins.txt"
-      if: "!! inputs.install_suggested_plugins"
+      if: "inputs.install_suggested_plugins == 'true'"
     - name: Install Jenkins Plugins
       shell: bash
       run: |
