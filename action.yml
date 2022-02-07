@@ -2,7 +2,7 @@ name: 'setup services jenkins container and install jenkins-cli.jar'
 description: 'Setup services jenkins container and install jenkins-cli.jar.'
 author: 'srz_zumix'
 inputs:
-  service_id:
+  id:
     description: "jenkins service container id"
     required: true
   port:
@@ -23,7 +23,7 @@ runs:
     - name: Wait Launch Jenkins
       shell: bash
       run: |
-        "${GITHUB_ACTION_PATH}/wait-launch.sh" "${{ inputs.service_id }}"
+        "${GITHUB_ACTION_PATH}/wait-launch.sh" "${{ inputs.id }}"
     - name: Setup CLI
       shell: bash
       env: 
