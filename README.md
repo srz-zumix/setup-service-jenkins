@@ -4,7 +4,7 @@ setup github actions services jenkins container and jenkins-cli wrapper
 
 ## Inputs
 
-### `service_id`
+### `id`
 
 Required. Jenkins service container id.
 
