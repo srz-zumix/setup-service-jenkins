@@ -29,7 +29,7 @@ Optional. Install suggested plugins [true,false]. Default is false.
 ### [.github/workflows/pr_test.yml](.github/workflows/pr_test.yml)
 
 ```yml
-name: PR test
+name: Example
 on: [pull_request]
 
 jobs:
@@ -50,7 +50,10 @@ jobs:
     steps:
     - name: clone
       uses: actions/checkout@v2
-    - uses: ./
+    - uses: srz-zumix/setup-service-jenkins@main
       with:
-        service_id: ${{ job.services.jenkins.id }}
+        id: "${{ job.services.jenkins.id }}"
+        install_suggested_plugins: true
+    - run: |
+        jenkins-cli list-plugins
 ```
