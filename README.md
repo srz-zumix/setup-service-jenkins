@@ -22,6 +22,10 @@ Optional. Install suggested plugins [true,false]. Default is false.
 
 ## Example usage
 
+### [github-actions-sample](https://github.com/srz-zumix/github-actions-sample)
+
+[reviewdog-jflint.yml](https://github.com/srz-zumix/github-actions-sample/blob/main/.github/workflows/reviewdog-jflint.yml)
+
 ### [.github/workflows/pr_test.yml](.github/workflows/pr_test.yml)
 
 ```yml
