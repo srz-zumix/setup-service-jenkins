@@ -25,6 +25,8 @@ jobs:
         install_suggested_plugins: true
     - run: |
         jenkins-cli list-plugins
+    - run: |
+        jenkins-cli help
 
   setup-jenkins-default:
     runs-on: ubuntu-latest
