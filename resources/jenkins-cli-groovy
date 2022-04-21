@@ -1,13 +1,3 @@
 #!/bin/bash
 
-TEMP="${RUNNER_TEMP}"
-if [ -z "${TEMP}" ]; then
-  TEMP="$(mktemp -d)"
-fi
-
-PREFIX="${TEMP}/jenkins/groovy"
-mkdir -p "${PREFIX}"
-
-echo "$*" > "${PREFIX}/script.groovy"
-
-jenkins-cli groovy "${PREFIX}/script.groovy"
+echo "$*" | jenkins-cli groovy =
