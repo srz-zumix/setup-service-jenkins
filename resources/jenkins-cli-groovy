@@ -6,6 +6,7 @@ if [ -z "${TEMP}" ]; then
 fi
 
 PREFIX="${TEMP}/jenkins/groovy"
+mkdir -p "${PREFIX}"
 
 echo "$*" > "${PREFIX}/script.groovy"
 
