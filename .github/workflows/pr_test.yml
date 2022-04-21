@@ -11,7 +11,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         env:
-          # disable setup wizard + JCasC load
+          # disable setup wizard
           JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/jenkins_home/casc_configs
         ports:
           - 8080:8080
@@ -22,11 +22,14 @@ jobs:
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
+        jcasc_path: testdata/jcasc
         install_suggested_plugins: true
     - run: |
         jenkins-cli list-plugins
     - run: |
         jenkins-cli help
+    - run: |
+        jenkins-cli-groovy println Jenkins.get().getSystemMessage()
 
   setup-jenkins-default:
     runs-on: ubuntu-latest
