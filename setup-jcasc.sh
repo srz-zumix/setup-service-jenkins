@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jenkins-cli-groovy println 'println System.getProperty("casc.jenkins.config")'
+jenkins-cli-groovy 'println System.getProperty("casc.jenkins.config")'
 
 SERVICE_ID=$1
 SERVICE_JCASC_PATH=/var/jenkins_home/casc_configs
