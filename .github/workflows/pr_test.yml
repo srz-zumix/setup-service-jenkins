@@ -29,7 +29,7 @@ jobs:
     - run: |
         jenkins-cli help
     - run: |
-        jenkins-cli-groovy println "Jenkins.get().getSystemMessage()"
+        jenkins-cli-groovy println "jenkins.model.Jenkins.get().getSystemMessage()"
 
   setup-jenkins-default:
     runs-on: ubuntu-latest
