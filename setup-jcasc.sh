@@ -1,14 +1,12 @@
 #!/bin/bash
 
-jenkins-cli-groovy 'println System.getProperty("casc.jenkins.config")'
-
 SERVICE_ID=$1
-SERVICE_JCASC_PATH=/var/jenkins_home/casc_configs
+SERVICE_JCASC_PATH=$(jenkins-cli-groovy 'println System.getProperty("casc.jenkins.config")')
 
 if [ -d "${JCASC_PATH}" ]; then
-    docker cp "${SERVICE_ID}:${SERVICE_JCASC_PATH}" "${JCASC_PATH}/."
+    docker cp "${JCASC_PATH}/." "${SERVICE_ID}:${SERVICE_JCASC_PATH}"
 else
-    docker cp "${SERVICE_ID}:${SERVICE_JCASC_PATH}" "${JCASC_PATH}"
+    docker cp "${JCASC_PATH}"   "${SERVICE_ID}:${SERVICE_JCASC_PATH}"
 fi
 
 echo '::group::jenkins-cli reload-configuration'
