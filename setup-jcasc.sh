@@ -12,6 +12,9 @@ fi
 docker exec "${SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
 echo '::endgroup::'
 
-echo '::group::jenkins-cli reload-configuration'
-jenkins-cli reload-configuration
-echo '::endgroup::'
+# echo '::group::jenkins-cli reload-configuration'
+# jenkins-cli reload-configuration
+# echo '::endgroup::'
+
+# restart
+"${GITHUB_ACTION_PATH}/restart-and-wait.sh"
