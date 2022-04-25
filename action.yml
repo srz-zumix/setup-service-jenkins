@@ -49,7 +49,7 @@ runs:
       if: "inputs.jcasc_path != ''"
       env: 
         JENKINS_URL: http://localhost:${{ inputs.port }}
-        JCASC_PATH: inputs.jcasc_path
+        JCASC_PATH: ${{ inputs.jcasc_path }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-jcasc.sh" "${{ inputs.id }}"
 
