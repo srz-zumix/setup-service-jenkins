@@ -4,6 +4,7 @@ echo '::group::jenkins restart'
 
 # get session id
 PREV_ID=$(jenkins-cli session-id)
+echo "${PREV_ID}"
 
 # restart
 jenkins-cli restart
