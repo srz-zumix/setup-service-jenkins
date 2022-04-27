@@ -10,9 +10,14 @@ while jenkins-cli session-id | grep "${PREV_ID}"; do
     echo "restart request..."
     jenkins-cli restart
 
+    local -i attempt_num=1
     until jenkins-cli session-id 2>/dev/null; do
         sleep 30; echo "waiting jenkins response..."
-        docker logs "${JENKINS_SERVICE_ID}"
+        if (( attempt_num == 4 )) then
+            docker logs "${JENKINS_SERVICE_ID}"
+            exit 1
+        fi
+        let attempt_num++
     done
     echo "checking session-id..."
 done
