@@ -18,6 +18,7 @@ fi
 TEMP_JCASC="${TEMP}/casc_configs"
 mkdir -p "${TEMP_JCASC}"
 sed "s#@jenkins_url@#${JENKINS_URL}#g" "${GITHUB_ACTION_PATH}/resources/location.yml.template" > "${TEMP_JCASC}/location.yml"
+cat "${TEMP_JCASC}/location.yml"
 
 docker cp "${TEMP_JCASC}/." "${SERVICE_ID}:${SERVICE_JCASC_PATH}"
 
