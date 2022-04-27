@@ -23,6 +23,8 @@ inputs:
     required: false
 runs:
   using: "composite"
+  env:
+    JENKINS_SERVICE_ID: ${{ inputs.id }}
   steps:
     - name: Wait Launch Jenkins
       shell: bash

@@ -4,7 +4,6 @@ echo '::group::jenkins restart'
 
 # get session id
 PREV_ID=$(jenkins-cli session-id)
-echo "${PREV_ID}"
 
 while jenkins-cli session-id | grep "${PREV_ID}"; do
     # restart
@@ -13,6 +12,7 @@ while jenkins-cli session-id | grep "${PREV_ID}"; do
 
     until jenkins-cli session-id 2>/dev/null; do
         sleep 30; echo "waiting jenkins response..."
+        docker logs "${JENKINS_SERVICE_ID}"
     done
     echo "checking session-id..."
 done

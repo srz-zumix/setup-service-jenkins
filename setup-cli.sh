@@ -19,7 +19,6 @@ sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
     "${GITHUB_ACTION_PATH}/resources/jenkins-cli.in" \
     > "${PREFIX}/jenkins-cli"
 chmod +x "${PREFIX}/jenkins-cli"
-cat "${PREFIX}/jenkins-cli"
 
 cp "${GITHUB_ACTION_PATH}/resources/jenkins-cli-groovy" "${PREFIX}/jenkins-cli-groovy"
 chmod +x "${PREFIX}/jenkins-cli-groovy"
