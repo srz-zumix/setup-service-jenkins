@@ -9,11 +9,11 @@ wait() {
     local -i attempt_num=1
     until jenkins-cli session-id 2>/dev/null; do
         sleep 30; echo "waiting jenkins response..."
-        if (( attempt_num == 4 )) then
+        if ((attempt_num == 4)); then
             docker logs "${JENKINS_SERVICE_ID}"
             exit 1
         fi
-        let attempt_num++
+        ((attempt_num++))
     done
 }
 
