@@ -29,3 +29,8 @@ echo '::endgroup::'
 
 # restart
 "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
+
+# dump
+echo '::group::jenkins dump jcasc'
+curl -sSL "${JENKINS_URL}/configuration-as-code/"
+echo '::endgroup::'
