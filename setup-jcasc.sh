@@ -5,6 +5,19 @@ if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
 fi
 
+if jenkins-cli list-plugins | grep configuration-as-code; then
+  :
+else
+  echo '::group::jenkins-cli install-plugin configuration-as-code'
+
+  jenkins-cli install-plugin configuration-as-code
+
+  # restart
+  "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
+
+  echo '::endgroup::'
+fi
+
 SERVICE_JCASC_PATH=$(jenkins-cli-groovy 'println System.getProperty("casc.jenkins.config")')
 
 echo '::group::copy jcasc'
@@ -23,20 +36,9 @@ docker cp "${TEMP_JCASC}/." "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
 docker exec "${JENKINS_SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
 echo '::endgroup::'
 
-if jenkins-cli list-plugins | grep configuration-as-code; then
-  echo '::group::jenkins-cli reload-configuration'
-  jenkins-cli reload-configuration
-  echo '::endgroup::'
-else
-  echo '::group::jenkins-cli install-plugin configuration-as-code'
-
-  jenkins-cli install-plugin configuration-as-code
-
-  # restart
-  "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
-
-  echo '::endgroup::'
-fi
+echo '::group::jenkins-cli reload-configuration'
+jenkins-cli reload-configuration
+echo '::endgroup::'
 
 # dump
 echo '::group::jenkins dump jcasc'
