@@ -1,3 +1,4 @@
 unclassified:
+  systemMessage: casCGlobalConfig.configurationPath change to @casc_path@
   casCGlobalConfig:
     configurationPath: "@casc_path@"
