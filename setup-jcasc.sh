@@ -5,6 +5,9 @@ if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
 fi
 
+TEMP_JCASC="${TEMP}/casc_configs"
+mkdir -p "${TEMP_JCASC}"
+
 SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("casc.jenkins.config", ""))')
 SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" printenv CASC_JENKINS_CONFIG)
 
@@ -28,10 +31,7 @@ else
     docker cp "${JCASC_PATH}"   "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
 fi
 
-TEMP_JCASC="${TEMP}/casc_configs"
-mkdir -p "${TEMP_JCASC}"
 sed "s#@jenkins_url@#${JENKINS_URL}#g" "${GITHUB_ACTION_PATH}/resources/location.yml.template" > "${TEMP_JCASC}/location.yml"
-
 docker cp "${TEMP_JCASC}/." "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
 
 echo "${SERVICE_JCASC_PATH}"
