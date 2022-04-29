@@ -32,5 +32,5 @@ echo '::endgroup::'
 
 # dump
 echo '::group::jenkins dump jcasc'
-curl -sSL "${JENKINS_URL}/configuration-as-code/"
+jenkins-cli-groovy "out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); out.toString()"
 echo '::endgroup::'
