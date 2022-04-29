@@ -40,5 +40,5 @@ fi
 
 # dump
 echo '::group::jenkins dump jcasc'
-jenkins-cli-groovy "out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); out.toString()"
+jenkins-cli-groovy "out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); println(out.toString())"
 echo '::endgroup::'
