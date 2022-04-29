@@ -38,9 +38,13 @@ echo "${SERVICE_JCASC_PATH}"
 docker exec "${JENKINS_SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
 echo '::endgroup::'
 
+casc_configure() {
+  jenkins-cli-groovy 'io.jenkins.plugins.casc.ConfigurationAsCode.get().configure()'
+}
+
 if jenkins-cli list-plugins | grep configuration-as-code; then
-  echo '::group::jenkins-cli reload-configuration'
-  jenkins-cli reload-configuration
+  echo '::group::casc configure'
+  casc_configure
   echo '::endgroup::'
 else
   echo '::group::jenkins-cli install-plugin configuration-as-code'
@@ -52,8 +56,8 @@ else
 fi
 
 if "${RELOAD}"; then
-  echo '::group::jenkins-cli reload-configuration'
-  jenkins-cli reload-configuration
+  echo '::group::casc configure'
+  casc_configure
   echo '::endgroup::'
 fi
 
