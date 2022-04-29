@@ -9,11 +9,16 @@ SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("cas
 SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" printenv CASC_JENKINS_CONFIG)
 
 SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
+RELOAD=false
 
 if [ -z "${SERVICE_JCASC_PATH}" ]; then
   # ${JENKINS_HOME}/jenkins.yml is jcasc default path
   JENKINS_HOME=$(jenkins-cli-groovy 'println(jenkins.model.Jenkins.instance.getRootDir())')
-  SERVICE_JCASC_PATH="${JENKINS_HOME}/jenkins.yml/"
+  SERVICE_JCASC_PATH="${JENKINS_HOME}/casc_config/"
+  sed "s#@casc_path@#${SERVICE_JCASC_PATH}#g" "${GITHUB_ACTION_PATH}/resources/cascConfigPath.yml.template" > "${TEMP_JCASC}/jenkins.yml"
+  docker cp "${TEMP_JCASC}/jenkins.yml" "${JENKINS_SERVICE_ID}:${JENKINS_HOME}/jenkins.yml"
+  rm -f "${TEMP_JCASC}/jenkins.yml"
+  RELOAD=true
 fi
 
 echo '::group::copy jcasc'
@@ -44,6 +49,12 @@ else
 
   # restart
   "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
+fi
+
+if "${RELOAD}"; then
+  echo '::group::jenkins-cli reload-configuration'
+  jenkins-cli reload-configuration
+  echo '::endgroup::'
 fi
 
 jenkins-cli-groovy 'casc = jenkins.model.GlobalConfiguration.all().get(io.jenkins.plugins.casc.CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
