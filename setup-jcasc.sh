@@ -5,14 +5,14 @@ if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
 fi
 
-SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'p = System.getProperty("casc.jenkins.config"); if( p != "null" ) println(p)')
+SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("casc.jenkins.config", "")')
 SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" echo '${CASC_JENKINS_CONFIG}')
 
 SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
 
 if [ -z "${SERVICE_JCASC_PATH}" ]; then
   # ${JENKINS_HOME}/jenkins.yml is jcasc default path
-  jenkins-cli-groovy 'casc = GlobalConfiguration.all().get(CasCGlobalConfig.class); if(casc != null) println(casc.getConfigurationPath())'
+  jenkins-cli-groovy 'casc = GlobalConfiguration.all().get(CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
   JENKINS_HOME=$(docker exec "${JENKINS_SERVICE_ID}" echo '${JENKINS_HOME}')
   SERVICE_JCASC_PATH="${JENKINS_HOME}/jenkins.yml/"
 fi
@@ -49,5 +49,5 @@ fi
 
 # dump
 echo '::group::jenkins dump jcasc'
-jenkins-cli-groovy "out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); out.flush(); println(out.toString())"
+jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); out.flush(); println(out.toString())'
 echo '::endgroup::'
