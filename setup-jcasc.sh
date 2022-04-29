@@ -6,14 +6,14 @@ if [ -z "${TEMP}" ]; then
 fi
 
 SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("casc.jenkins.config", ""))')
-SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" echo '${CASC_JENKINS_CONFIG}')
+SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" printenv CASC_JENKINS_CONFIG)
 
 SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
 
 if [ -z "${SERVICE_JCASC_PATH}" ]; then
   # ${JENKINS_HOME}/jenkins.yml is jcasc default path
   jenkins-cli-groovy 'casc = GlobalConfiguration.all().get(CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
-  JENKINS_HOME=$(docker exec "${JENKINS_SERVICE_ID}" echo '${JENKINS_HOME}')
+  JENKINS_HOME=$(jenkins-cli-groovy 'println(Jenkins.get().getRootDir())')
   SERVICE_JCASC_PATH="${JENKINS_HOME}/jenkins.yml/"
 fi
 
