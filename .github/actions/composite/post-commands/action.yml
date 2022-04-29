@@ -7,7 +7,9 @@ runs:
     - name: list-plugins
       shell: bash
       run: |
+        echo '::group::jenkins-cli list-plugins'
         jenkins-cli list-plugins
+        echo '::endgroup::'
     - name: print system message
       shell: bash
       run: |

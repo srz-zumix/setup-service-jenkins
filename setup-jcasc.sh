@@ -30,6 +30,7 @@ sed "s#@jenkins_url@#${JENKINS_URL}#g" "${GITHUB_ACTION_PATH}/resources/location
 
 docker cp "${TEMP_JCASC}/." "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
 
+echo "${SERVICE_JCASC_PATH}"
 docker exec "${JENKINS_SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
 echo '::endgroup::'
 
@@ -39,13 +40,11 @@ if jenkins-cli list-plugins | grep configuration-as-code; then
   echo '::endgroup::'
 else
   echo '::group::jenkins-cli install-plugin configuration-as-code'
-
   jenkins-cli install-plugin configuration-as-code
+  echo '::endgroup::'
 
   # restart
   "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
-
-  echo '::endgroup::'
 fi
 
 # dump
