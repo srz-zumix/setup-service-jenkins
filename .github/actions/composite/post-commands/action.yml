@@ -1,0 +1,14 @@
+name: 'Setup Jenkins Post Check'
+description: 'Setup Jenkins Post Check Commands'
+
+runs:
+  using: "composite"
+  steps:
+    - name: list-plugins
+      shell: bash
+      run: |
+        jenkins-cli list-plugins
+    - name: print system message
+      shell: bash
+      run: |
+        jenkins-cli-groovy println "jenkins.model.Jenkins.get().getSystemMessage()"
