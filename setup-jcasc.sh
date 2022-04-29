@@ -12,8 +12,7 @@ SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
 
 if [ -z "${SERVICE_JCASC_PATH}" ]; then
   # ${JENKINS_HOME}/jenkins.yml is jcasc default path
-  jenkins-cli-groovy 'casc = jenkins.model.GlobalConfiguration.all().get(io.jenkins.plugins.casc.CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
-  JENKINS_HOME=$(jenkins-cli-groovy 'println(Jenkins.get().getRootDir())')
+  JENKINS_HOME=$(jenkins-cli-groovy 'println(Jenkins.instance.getRootDir())')
   SERVICE_JCASC_PATH="${JENKINS_HOME}/jenkins.yml/"
 fi
 
@@ -46,6 +45,8 @@ else
   # restart
   "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
 fi
+
+jenkins-cli-groovy 'casc = jenkins.model.GlobalConfiguration.all().get(io.jenkins.plugins.casc.CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
 
 # dump
 echo '::group::jenkins dump jcasc'
