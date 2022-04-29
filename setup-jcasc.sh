@@ -5,7 +5,7 @@ if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
 fi
 
-SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("casc.jenkins.config", "")')
+SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("casc.jenkins.config", ""))')
 SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" echo '${CASC_JENKINS_CONFIG}')
 
 SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
