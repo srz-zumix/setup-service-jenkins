@@ -75,3 +75,5 @@ jobs:
       with:
         id: ${{ job.services.jenkins.id }}
     - uses: ./.github/actions/composite/post-commands
+      with:
+        id: ${{ job.services.jenkins.id }}
