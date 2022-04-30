@@ -37,6 +37,12 @@ runs:
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-cli.sh"
+    - name: SetUp Jenkins Container
+      shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-container.sh"
     - name: Install Jenkins Suggested Plugins
       shell: bash
       env:
