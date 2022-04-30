@@ -24,12 +24,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: SetUp Jenkins Container
+    - name: Initial SetUp
       shell: bash
       env:
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
-        "${GITHUB_ACTION_PATH}/setup-container.sh"
+        "${GITHUB_ACTION_PATH}/setup-initial.sh"
     - name: Wait Launch Jenkins
       shell: bash
       env:
