@@ -25,6 +25,8 @@ jobs:
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
     - uses: ./.github/actions/composite/post-commands
+      with:
+        id: ${{ job.services.jenkins.id }}
 
   setup-jenkins-spec-javaopt-jcasc-path:
     runs-on: ubuntu-latest
@@ -49,7 +51,9 @@ jobs:
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
     - uses: ./.github/actions/composite/post-commands
-        
+      with:
+        id: ${{ job.services.jenkins.id }}
+
   setup-jenkins-default:
     runs-on: ubuntu-latest
     services:

@@ -1,9 +1,19 @@
 name: 'Setup Jenkins Post Check'
 description: 'Setup Jenkins Post Check Commands'
 
+inputs:
+  id:
+    required: true
+
 runs:
   using: "composite"
   steps:
+    - name: jenkins log
+      shell: bash
+      run: |
+        echo '::group::jenkins log'
+        docker logs ${{ input.id }}
+        echo '::endgroup::'
     - name: list-plugins
       shell: bash
       run: |
