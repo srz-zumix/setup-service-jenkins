@@ -1,8 +1,19 @@
 #!/bin/bash
 
-until docker logs "${JENKINS_SERVICE_ID}" 2>&1 | grep "Jenkins is fully up and running" >/dev/null; do
-  sleep 30; echo "waiting jenkins launch..."
-done
+wait() {
+  local attempt_max=4
+  local -i attempt_num=1
+  until jenkins-log | grep "Jenkins is fully up and running" >/dev/null; do
+    sleep 30; echo "waiting jenkins launch..."
+    if ((attempt_num == attempt_max)); then
+        jenkins-log
+        exit 1
+    fi
+    ((attempt_num++))
+  done
+}
+
+wait
 echo '::group::jenkins docker log'
-docker logs "${JENKINS_SERVICE_ID}" 2>&1
+jenkins-log
 echo '::endgroup::'

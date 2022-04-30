@@ -68,6 +68,5 @@ jenkins-cli-groovy 'println(io.jenkins.plugins.casc.ConfigurationAsCode.get().ge
 echo '::group::jenkins dump jcasc'
 jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); println(out.toString())'
 sleep 5
-docker logs -t "${JENKINS_SERVICE_ID}" > "${TEMP}/log.txt"
-cat "${TEMP}/log.txt"
+jenkins-log
 echo '::endgroup::'

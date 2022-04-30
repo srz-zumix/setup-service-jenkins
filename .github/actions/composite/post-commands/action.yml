@@ -12,7 +12,7 @@ runs:
       shell: bash
       run: |
         echo '::group::jenkins log'
-        docker logs ${{ inputs.id }}
+        jenkins-log
         echo '::endgroup::'
     - name: list-plugins
       shell: bash

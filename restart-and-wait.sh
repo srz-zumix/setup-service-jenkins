@@ -13,12 +13,12 @@ wait() {
     until jenkins-cli session-id 2>/dev/null; do
         sleep 30; echo "waiting jenkins response..."
         if ((attempt_num == 1)); then
-            docker logs "${JENKINS_SERVICE_ID}"
+            jenkins-log
             docker container restart "${JENKINS_SERVICE_ID}"
             echo 'container restart'
         else
             if ((attempt_num == attempt_max)); then
-                docker logs "${JENKINS_SERVICE_ID}"
+                jenkins-log
                 exit 1
             fi
         fi
