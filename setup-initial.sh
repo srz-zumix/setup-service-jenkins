@@ -16,5 +16,10 @@ sed -e "s#@container_id@#${JENKINS_SERVICE_ID}#g" \
     > "${PREFIX}/jenkins-log"
 chmod +x "${PREFIX}/jenkins-log"
 
+docker inspect "${JENKINS_SERVICE_ID}"
+
 # coppy logging.properties
 docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:/var/jenkins_home/logging.properties"
+
+# restart
+"${GITHUB_ACTION_PATH}/restart-and-wait.sh"
