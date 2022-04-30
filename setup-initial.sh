@@ -17,4 +17,4 @@ sed -e "s#@container_id@#${JENKINS_SERVICE_ID}#g" \
 chmod +x "${PREFIX}/jenkins-log"
 
 # coppy logging.properties
-docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:/var/lib/jenkins/logging.properties"
+docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:/var/jenkins_home/logging.properties"
