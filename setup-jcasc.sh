@@ -18,9 +18,8 @@ if [ -z "${SERVICE_JCASC_PATH}" ]; then
   # ${JENKINS_HOME}/jenkins.yml is jcasc default path
   JENKINS_HOME=$(jenkins-cli-groovy 'println(jenkins.model.Jenkins.instance.getRootDir())')
   SERVICE_JCASC_PATH="${JENKINS_HOME}/casc_config/"
-  sed "s#@casc_path@#${SERVICE_JCASC_PATH}#g" "${GITHUB_ACTION_PATH}/resources/cascConfigPath.yml.template" > "${TEMP_JCASC}/jenkins.yml"
-  docker cp "${TEMP_JCASC}/jenkins.yml" "${JENKINS_SERVICE_ID}:${JENKINS_HOME}/jenkins.yml"
-  rm -f "${TEMP_JCASC}/jenkins.yml"
+  sed "s#@casc_path@#${SERVICE_JCASC_PATH}#g" "${GITHUB_ACTION_PATH}/resources/cascConfigPath.yml.template" > "${TEMP}/jenkins.yml"
+  docker cp "${TEMP}/jenkins.yml" "${JENKINS_SERVICE_ID}:${JENKINS_HOME}/jenkins.yml"
   RELOAD=true
 fi
 
@@ -33,6 +32,8 @@ fi
 
 sed "s#@jenkins_url@#${JENKINS_URL}#g" "${GITHUB_ACTION_PATH}/resources/location.yml.template" > "${TEMP_JCASC}/location.yml"
 docker cp "${TEMP_JCASC}/." "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
+
+docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:/var/lib/jenkins/logging.properties"
 
 echo "${SERVICE_JCASC_PATH}"
 docker exec "${JENKINS_SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
@@ -69,5 +70,6 @@ jenkins-cli-groovy 'println(io.jenkins.plugins.casc.ConfigurationAsCode.get().ge
 echo '::group::jenkins dump jcasc'
 jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); println(out.toString())'
 sleep 5
-docker logs "${JENKINS_SERVICE_ID}"
+docker logs -t "${JENKINS_SERVICE_ID}" > "${TEMP}/log.txt"
+cat "${TEMP}/log.txt"
 echo '::endgroup::'
