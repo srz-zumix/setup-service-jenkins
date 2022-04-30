@@ -39,6 +39,7 @@ docker exec "${JENKINS_SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
 echo '::endgroup::'
 
 casc_configure() {
+  jenkins-cli-groovy 'io.jenkins.plugins.casc.ConfigurationAsCode.get().getStandardConfig().join(", ")'
   jenkins-cli-groovy 'io.jenkins.plugins.casc.ConfigurationAsCode.get().configure()'
 }
 
@@ -65,5 +66,6 @@ jenkins-cli-groovy 'casc = jenkins.model.GlobalConfiguration.all().get(io.jenkin
 
 # dump
 echo '::group::jenkins dump jcasc'
-jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); out.flush(); println(out.toString())'
+jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); println(out.toString())'
+docker logs "${JENKINS_SERVICE_ID}"
 echo '::endgroup::'
