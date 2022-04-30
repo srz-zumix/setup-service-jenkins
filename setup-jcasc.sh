@@ -39,8 +39,7 @@ docker exec "${JENKINS_SERVICE_ID}" ls "${SERVICE_JCASC_PATH}"
 echo '::endgroup::'
 
 casc_configure() {
-  jenkins-cli-groovy 'println(io.jenkins.plugins.casc.ConfigurationAsCode.get().getStandardConfig().join(", "))'
-  jenkins-cli-groovy 'io.jenkins.plugins.casc.ConfigurationAsCode.get().configure()'
+  jenkins-cli-groovy 'io.jenkins.plugins.casc.ConfigurationAsCode.get().configure(); jenkins.model.Jenkins.instance.save();'
 }
 
 if jenkins-cli list-plugins | grep configuration-as-code; then
@@ -63,6 +62,8 @@ if "${RELOAD}"; then
 fi
 
 jenkins-cli-groovy 'casc = jenkins.model.GlobalConfiguration.all().get(io.jenkins.plugins.casc.CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
+
+jenkins-cli-groovy 'println(io.jenkins.plugins.casc.ConfigurationAsCode.get().getStandardConfig().join(", "))'
 
 # dump
 echo '::group::jenkins dump jcasc'
