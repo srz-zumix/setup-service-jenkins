@@ -23,7 +23,7 @@ JENKINS_JAVA_OPTS=$(echo ${INSPECT_ENVS} | grep JAVA_OPTS= | cut -d'=' -f2-)
 echo "${JENKINS_JAVA_OPTS}"
 
 if [[ "${JENKINS_JAVA_OPTS}" =~ java.util.logging.config.file ]]; then
-  LOGGING_PROPERTIES_FILE=$(echo "${JENKINS_JAVA_OPTS}" | sed 's/.*-Djava.util.logging.config.file=[\S]*.*/\1/g')
+  LOGGING_PROPERTIES_FILE=$(echo "${JENKINS_JAVA_OPTS}" | sed 's/.*-Djava.util.logging.config.file=([\S]*).*/\1/g')
   echo "${LOGGING_PROPERTIES_FILE}"
   # coppy logging.properties
   docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:${LOGGING_PROPERTIES_FILE}"
