@@ -21,10 +21,10 @@ echo '::group::jenkins initialize for JAVA_OPT'
 INSPECT_ENVS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}")
 echo "${INSPECT_ENVS}"
 
-JENKINS_JAVA_OPTS=$(echo ${INSPECT_ENVS} | grep JAVA_OPTS= | cut -d'=' -f2-)
+JENKINS_JAVA_OPTS=($(echo ${INSPECT_ENVS} | grep JAVA_OPTS= | cut -d'=' -f2-))
 echo "${JENKINS_JAVA_OPTS}"
 
-for opt_set in $(echo "${JENKINS_JAVA_OPTS}" | cut -d' '); then
+for opt_set in "${JENKINS_JAVA_OPTS[@]}"; do
   OPT=$(echo "${opt_set}" | cut -d'=' -f1)
   VAL=$(echo "${opt_set}" | cut -d'=' -f2-)
   echo "${OPT}: ${VAL}"
