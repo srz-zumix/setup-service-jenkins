@@ -16,13 +16,20 @@ sed -e "s#@container_id@#${JENKINS_SERVICE_ID}#g" \
     > "${PREFIX}/jenkins-log"
 chmod +x "${PREFIX}/jenkins-log"
 
+
+echo '::group::docker inspect jenkins'
+docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"
+echo '::endgroup::'
+
 echo '::group::jenkins initialize for JAVA_OPT'
 
 INSPECT_ENVS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}")
 echo "${INSPECT_ENVS}"
 
 JENKINS_JAVA_OPTS=($(echo ${INSPECT_ENVS} | grep JAVA_OPTS= | cut -d'=' -f2-))
+echo "--------------------------------------"
 echo "${JENKINS_JAVA_OPTS}"
+echo "--------------------------------------"
 
 for opt_set in "${JENKINS_JAVA_OPTS[@]}"; do
   OPT=$(echo "${opt_set}" | cut -d'=' -f1)
