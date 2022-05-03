@@ -24,11 +24,7 @@ echo '::endgroup::'
 echo '::group::jenkins initialize for JAVA_OPT'
 
 JENKINS_JAVA_OPTS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep JAVA_OPTS= | cut -d'=' -f2-)
-echo "--------------------------------------"
-echo "${JENKINS_JAVA_OPTS}"
-echo "--------------------------------------"
-
-for opt_set in "${JENKINS_JAVA_OPTS[@]}"; do
+for opt_set in "${JENKINS_JAVA_OPTS}"; do
   OPT=$(echo "${opt_set}" | cut -d'=' -f1)
   VAL=$(echo "${opt_set}" | cut -d'=' -f2-)
   echo "${OPT}: ${VAL}"
