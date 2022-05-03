@@ -28,7 +28,7 @@ for opt_set in ${JENKINS_JAVA_OPTS}; do
   OPT=$(echo "${opt_set}" | cut -d'=' -f1)
   VAL=$(echo "${opt_set}" | cut -d'=' -f2-)
   echo "${OPT}: ${VAL}"
-  if [ "${OPT}" == "java.util.logging.config.file" ]; then
+  if [ "${OPT}" == "-Djava.util.logging.config.file" ]; then
     echo "coppy logging properties" 
     docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:${VAL}"
   fi
