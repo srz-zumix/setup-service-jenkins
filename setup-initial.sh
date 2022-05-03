@@ -27,9 +27,9 @@ JENKINS_JAVA_OPTS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{
 for opt_set in ${JENKINS_JAVA_OPTS}; do
   OPT=$(echo "${opt_set}" | cut -d'=' -f1)
   VAL=$(echo "${opt_set}" | cut -d'=' -f2-)
-  echo "${OPT}: ${VAL}"
+  # echo "${OPT}: ${VAL}"
   if [ "${OPT}" == "-Djava.util.logging.config.file" ]; then
-    echo "coppy logging properties" 
+    echo "coppy logging properties: ${VAL}" 
     docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:${VAL}"
   fi
 done
@@ -38,4 +38,5 @@ echo '::endgroup::'
 
 # restart
 docker container restart "${JENKINS_SERVICE_ID}"
+sleep 30
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
