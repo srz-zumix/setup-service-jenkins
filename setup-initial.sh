@@ -22,7 +22,7 @@ docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_S
 echo '::endgroup::'
 
 echo '::group::docker logs'
-jenkins-log
+"${PREFIX}/jenkins-log"
 echo '::endgroup::'
 
 echo '::group::jenkins initialize for JAVA_OPT'
