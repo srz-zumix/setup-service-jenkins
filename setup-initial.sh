@@ -21,6 +21,10 @@ echo '::group::docker inspect jenkins'
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"
 echo '::endgroup::'
 
+echo '::group::docker logs'
+jenkins-log
+echo '::endgroup::'
+
 echo '::group::jenkins initialize for JAVA_OPT'
 
 JENKINS_JAVA_OPTS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep JAVA_OPTS= | cut -d'=' -f2-)
