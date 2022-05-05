@@ -12,7 +12,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         env:
           # disable setup wizard
-          JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Djava.util.logging.config.file=/var/jenkins_home/logging.properties
+          JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+          # JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Djava.util.logging.config.file=/var/jenkins_home/logging.properties
         ports:
           - 8080:8080
           - 50000:50000
