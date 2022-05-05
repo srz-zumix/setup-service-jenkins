@@ -44,5 +44,4 @@ echo '::endgroup::'
 
 # restart
 docker container restart "${JENKINS_SERVICE_ID}"
-sleep 30
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"

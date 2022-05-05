@@ -60,13 +60,10 @@ if "${RELOAD}"; then
   echo '::endgroup::'
 fi
 
-jenkins-cli-groovy 'casc = jenkins.model.GlobalConfiguration.all().get(io.jenkins.plugins.casc.CasCGlobalConfig.class); cascPath = casc != null ? casc.getConfigurationPath() : ""; println(cascPath)'
-
-jenkins-cli-groovy 'println(io.jenkins.plugins.casc.ConfigurationAsCode.get().getStandardConfig().join(", "))'
-
 # dump
 echo '::group::jenkins dump jcasc'
-jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); println(out.toString())'
+jenkins-cli-groovy 'print("jcasc path: "); println(io.jenkins.plugins.casc.ConfigurationAsCode.get().getStandardConfig().join(", "))'
+jenkins-cli-groovy 'out = new ByteArrayOutputStream(); io.jenkins.plugins.casc.ConfigurationAsCode.get().export(out); println("dump jcasc config:"); println(out.toString())'
 sleep 5
-jenkins-log
+jenkins-log | grep -A 256 "dump jcasc config:"
 echo '::endgroup::'
