@@ -1,4 +1,5 @@
-unclassified:
+jenkins:
   systemMessage: casCGlobalConfig.configurationPath change to @casc_path@
+unclassified:
   casCGlobalConfig:
     configurationPath: "@casc_path@"
