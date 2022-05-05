@@ -18,7 +18,7 @@ inputs:
     default: false
     required: false
   jcasc_path:
-    description: Jenkins Configuration as Code YAML path
+    description: Jenkins Configuration as Code YAML path. (directory or file)
     default: ''
     required: false
 runs:

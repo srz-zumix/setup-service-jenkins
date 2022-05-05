@@ -20,6 +20,11 @@ Optional. Jenkins plugins file. Default is empty.
 
 Optional. Install suggested plugins [true,false]. Default is false.
 
+### `jcasc_path`
+
+Optional. Jenkins Configuration as Code YAML path. (directory or file)
+
+
 ## Example usage
 
 ### [github-actions-sample](https://github.com/srz-zumix/github-actions-sample)
@@ -54,6 +59,7 @@ jobs:
       with:
         id: "${{ job.services.jenkins.id }}"
         install_suggested_plugins: true
+        jcasc_path: "casc_configs/"
     - run: |
         jenkins-cli list-plugins
 ```
