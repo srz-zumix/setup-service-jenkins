@@ -25,6 +25,8 @@ echo '::group::docker logs'
 "${PREFIX}/jenkins-log"
 echo '::endgroup::'
 
+# /var/jenkins_home/war/WEB-INF/init.groovy.d
+
 echo '::group::jenkins initialize for JAVA_OPT'
 
 JENKINS_JAVA_OPTS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep JAVA_OPTS= | cut -d'=' -f2-)

@@ -15,11 +15,11 @@ SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
 RELOAD=false
 
 if [ -z "${SERVICE_JCASC_PATH}" ]; then
-  # ${JENKINS_HOME}/jenkins.yml is jcasc default path
+  # ${JENKINS_HOME}/jenkins.yaml is jcasc default path
   JENKINS_HOME=$(jenkins-cli-groovy 'println(jenkins.model.Jenkins.instance.getRootDir())')
   SERVICE_JCASC_PATH="${JENKINS_HOME}/casc_config/"
-  sed "s#@casc_path@#${SERVICE_JCASC_PATH}#g" "${GITHUB_ACTION_PATH}/resources/cascConfigPath.yml.template" > "${TEMP}/jenkins.yml"
-  docker cp "${TEMP}/jenkins.yml" "${JENKINS_SERVICE_ID}:${JENKINS_HOME}/jenkins.yml"
+  sed "s#@casc_path@#${SERVICE_JCASC_PATH}#g" "${GITHUB_ACTION_PATH}/resources/cascConfigPath.yaml.template" > "${TEMP}/jenkins.yaml"
+  docker cp "${TEMP}/jenkins.yaml" "${JENKINS_SERVICE_ID}:${JENKINS_HOME}/jenkins.yaml"
   RELOAD=true
 fi
 
@@ -30,7 +30,7 @@ else
     docker cp "${JCASC_PATH}"   "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
 fi
 
-sed "s#@jenkins_url@#${JENKINS_URL}#g" "${GITHUB_ACTION_PATH}/resources/location.yml.template" > "${TEMP_JCASC}/location.yml"
+sed "s#@jenkins_url@#${JENKINS_URL}#g" "${GITHUB_ACTION_PATH}/resources/location.yaml.template" > "${TEMP_JCASC}/location.yaml"
 docker cp "${TEMP_JCASC}/." "${JENKINS_SERVICE_ID}:${SERVICE_JCASC_PATH}"
 
 echo "${SERVICE_JCASC_PATH}"
