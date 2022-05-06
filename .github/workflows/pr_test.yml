@@ -75,7 +75,7 @@ jobs:
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
+        jcasc_path: testdata/jcasc
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
-        jcasc_path: testdata/jcasc
