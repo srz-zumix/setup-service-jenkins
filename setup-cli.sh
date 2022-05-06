@@ -14,10 +14,14 @@ mv jenkins-cli.jar "${PREFIX}/jenkins-cli.jar"
 
 echo "${PREFIX}" >>"${GITHUB_PATH}"
 
-cp "${GITHUB_ACTION_PATH}/resources/jenkins-cli.in" "${PREFIX}/jenkins-cli"
-sed -i "s#@jenkins_url@#${JENKINS_URL}#g" "${PREFIX}/jenkins-cli"
-sed -i "s#@jenkins_cli_jar@#${PREFIX}/jenkins-cli.jar#g" "${PREFIX}/jenkins-cli"
+sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
+    -e "s#@jenkins_cli_jar@#${PREFIX}/jenkins-cli.jar#g" \
+    "${GITHUB_ACTION_PATH}/resources/jenkins-cli.in" \
+    > "${PREFIX}/jenkins-cli"
 chmod +x "${PREFIX}/jenkins-cli"
+
+cp "${GITHUB_ACTION_PATH}/resources/jenkins-cli-groovy" "${PREFIX}/jenkins-cli-groovy"
+chmod +x "${PREFIX}/jenkins-cli-groovy"
 
 echo '::group::jenkins-cli help'
 "${PREFIX}/jenkins-cli" help

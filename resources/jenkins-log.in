@@ -1,0 +1,4 @@
+#!/bin/bash
+
+JENKINS_SERVICE_ID=@container_id@
+docker logs "$@" "${JENKINS_SERVICE_ID}" 2>&1

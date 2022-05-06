@@ -17,29 +17,55 @@ inputs:
     description: "install suggested plugins"
     default: false
     required: false
+  jcasc_path:
+    description: Jenkins Configuration as Code YAML path. (directory or file)
+    default: ''
+    required: false
 runs:
   using: "composite"
   steps:
+    - name: Initial SetUp
+      shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-initial.sh"
     - name: Wait Launch Jenkins
       shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/wait-launch.sh" "${{ inputs.id }}"
     - name: Setup CLI
       shell: bash
       env: 
         JENKINS_URL: http://localhost:${{ inputs.port }}
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-cli.sh"
     - name: Install Jenkins Suggested Plugins
       shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${GITHUB_ACTION_PATH}/resources/DefaultJenkinsPlugins.txt"
       if: "inputs.install_suggested_plugins == 'true'"
     - name: Install Jenkins Plugins
       shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugins_file }}"
       if: "inputs.plugins_file != ''"
+    - name: Setup JCasC
+      shell: bash
+      if: "inputs.jcasc_path != ''"
+      env: 
+        JENKINS_URL: http://localhost:${{ inputs.port }}
+        JCASC_PATH: ${{ inputs.jcasc_path }}
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-jcasc.sh" "${{ inputs.id }}"
 
 branding:
   icon: 'settings'
