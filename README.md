@@ -55,7 +55,7 @@ jobs:
     steps:
     - name: clone
       uses: actions/checkout@v2
-    - uses: srz-zumix/setup-service-jenkins@main
+    - uses: srz-zumix/setup-service-jenkins@v1
       with:
         id: "${{ job.services.jenkins.id }}"
         install_suggested_plugins: true
