@@ -39,7 +39,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         env:
           # disable setup wizard + JCasC path
-          JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/jenkins_home/casc_configs
+          JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/casc_configs
         ports:
           - 8080:8080
           - 50000:50000
@@ -64,8 +64,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         env:
-          # disable setup wizard + JCasC path
-          JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/jenkins_home/casc_configs
+          # disable setup wizard
+          JAVA_OPTS: -Djenkins.install.runSetupWizard=false
         ports:
           - 8080:8080
           - 50000:50000
@@ -78,3 +78,4 @@ jobs:
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
+        jcasc_path: testdata/jcasc
