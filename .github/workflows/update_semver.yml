@@ -5,7 +5,9 @@ on:
       - '**'
     tags:
       - 'v*.*.*'
-
+  release:
+    types: [published]
+    
 jobs:
   update-semver:
     runs-on: ubuntu-latest
