@@ -23,6 +23,9 @@ chmod +x "${PREFIX}/jenkins-cli"
 cp "${GITHUB_ACTION_PATH}/resources/jenkins-cli-groovy" "${PREFIX}/jenkins-cli-groovy"
 chmod +x "${PREFIX}/jenkins-cli-groovy"
 
+cp "${GITHUB_ACTION_PATH}/resources/jenkins-cli-groovyfile" "${PREFIX}/jenkins-cli-groovyfile"
+chmod +x "${PREFIX}/jenkins-cli-groovyfile"
+
 echo '::group::jenkins-cli help'
 "${PREFIX}/jenkins-cli" help
 echo '::endgroup::'
