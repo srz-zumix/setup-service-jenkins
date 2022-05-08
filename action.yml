@@ -9,6 +9,10 @@ inputs:
     description: "jenkins service container port"
     default: '8080'
     required: false
+  plugins:
+    description: "install plugin list"
+    default: ''
+    required: false
   plugins_file:
     description: "install plugin list file"
     default: ''
@@ -51,6 +55,14 @@ runs:
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${GITHUB_ACTION_PATH}/resources/DefaultJenkinsPlugins.txt"
       if: "inputs.install_suggested_plugins == 'true'"
     - name: Install Jenkins Plugins
+      shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
+        INSTALL_PLUGINS: ${{ inputs.plugins }}
+      run: |
+        "${GITHUB_ACTION_PATH}/install-plugins-fromenv.sh"
+      if: "inputs.plugins != ''"
+    - name: Install Jenkins Plugins from file
       shell: bash
       env:
         JENKINS_SERVICE_ID: ${{ inputs.id }}
