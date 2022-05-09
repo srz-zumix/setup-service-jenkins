@@ -12,9 +12,13 @@ Required. Jenkins service container id.
 
 Optional. Jenkins service container port. Default is `8080`.
 
+### `plugins`
+
+Optional. Jenkins plugins list. Default is empty.
+
 ### `plugins_file`
 
-Optional. Jenkins plugins file. Default is empty.
+Optional. Jenkins plugins list file. Default is empty.
 
 ### `install_suggested_plugins`
 
@@ -59,6 +63,9 @@ jobs:
       with:
         id: "${{ job.services.jenkins.id }}"
         install_suggested_plugins: true
+        plugins: |
+          job-dsl
+          warnings-ng
         jcasc_path: "casc_configs/"
     - run: |
         jenkins-cli list-plugins
