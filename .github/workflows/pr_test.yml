@@ -31,6 +31,9 @@ jobs:
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
+    - run: |
+        jenkins-cli-groovy
+        jenkins-cli-groovyfile
 
   setup-jenkins-spec-javaopt-jcasc-path:
     runs-on: ubuntu-latest
