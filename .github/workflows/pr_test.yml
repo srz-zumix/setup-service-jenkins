@@ -25,6 +25,9 @@ jobs:
         id: ${{ job.services.jenkins.id }}
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
+        plugins: |
+          job-dsl
+          warnings-ng
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
