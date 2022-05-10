@@ -2,6 +2,13 @@
 
 setup github actions services jenkins container and jenkins-cli wrapper
 
+| command                | summary                 |
+|:-----------------------|:------------------------|
+| jenkins-cli            | jenkins-cli.jar wrapper (java -jar jenkin-cli.jar -s SERVICE_JENKINS_URL) |
+| jenkins-cli-groovy     | Executes the specified Groovy script. |
+| jenkins-cli-groovyfile | Executes the specified Groovy script file. |
+| jenkins-log            | Print service jenkins docker logs. |
+
 ## Inputs
 
 ### `id`
@@ -27,7 +34,6 @@ Optional. Install suggested plugins [true,false]. Default is false.
 ### `jcasc_path`
 
 Optional. Jenkins Configuration as Code YAML path. (directory or file)
-
 
 ## Example usage
 

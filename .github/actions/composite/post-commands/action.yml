@@ -23,4 +23,4 @@ runs:
     - name: print system message
       shell: bash
       run: |
-        jenkins-cli-groovy println "jenkins.model.Jenkins.get().getSystemMessage()"
+        jenkins-cli-groovyfile testdata/printSystemMessage.groovy arg1 arg2
