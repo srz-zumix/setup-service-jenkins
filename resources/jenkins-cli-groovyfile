@@ -1,7 +1,13 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    jenkins-cli help groovy
-else
-    jenkins-cli groovy < "$1"
+if [ $# = 0 ]; then
+    # jenkins-cli help groovy
+    echo "jenkins-cli-groovyfile [SCRIPT_FILE] [ARGUMENTS ...]"
+    echo " Executes the specified Groovy script. "
+    echo " SCRIPT_FILE : Script file to be executed."
+    echo " ARGUMENTS   : Command line arguments to pass into script."
+ else
+    SCRIPT_FILE="$1"
+    shift
+    jenkins-cli groovy = "$@" < "${SCRIPT_FILE}"
 fi
