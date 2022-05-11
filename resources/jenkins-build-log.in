@@ -1,0 +1,4 @@
+
+#!/bin/bash
+
+curl -sSL https://@jenkins_url@/job/$1/${2:-lastBuild}/consoleText

@@ -10,11 +10,21 @@ PREFIX="${TEMP}/jenkins/bin"
 mkdir -p "${PREFIX}"
 echo "${PREFIX}" >>"${GITHUB_PATH}"
 
+echo '::group::install tools'
 # docker log
 sed -e "s#@container_id@#${JENKINS_SERVICE_ID}#g" \
     "${GITHUB_ACTION_PATH}/resources/jenkins-log.in" \
     > "${PREFIX}/jenkins-log"
 chmod +x "${PREFIX}/jenkins-log"
+
+# jenkins build log
+sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
+    "${GITHUB_ACTION_PATH}/resources/jenkins-build-log.in" \
+    > "${PREFIX}/jenkins-build-log"
+chmod +x "${PREFIX}/jenkins-build-log"
+
+ls -l "${PREFIX}"
+echo '::endgroup::'
 
 
 echo '::group::docker inspect jenkins'
