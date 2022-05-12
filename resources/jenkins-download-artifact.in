@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -sSOL "@jenkins_url@/job/$1/${3:-lastBuild}/artifact/$2"

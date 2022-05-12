@@ -23,6 +23,12 @@ sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
     > "${PREFIX}/jenkins-build-log"
 chmod +x "${PREFIX}/jenkins-build-log"
 
+# jenkins download artifacts
+sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
+    "${GITHUB_ACTION_PATH}/resources/jenkins-download-artifact.in" \
+    > "${PREFIX}/jenkins-download-artifact"
+chmod +x "${PREFIX}/jenkins-download-artifact"
+
 ls -l "${PREFIX}"
 echo '::endgroup::'
 
