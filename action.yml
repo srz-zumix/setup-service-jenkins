@@ -69,6 +69,16 @@ runs:
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugins_file }}"
       if: "inputs.plugins_file != ''"
+    - name: Restart Jenkins
+      shell: bash
+      env:
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
+      run: |
+        "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
+      if: >
+        inputs.plugins_file != '' &&
+        inputs.plugins != '' && 
+        inputs.install_suggested_plugins == 'true'
     - name: Setup JCasC
       shell: bash
       if: "inputs.jcasc_path != ''"
