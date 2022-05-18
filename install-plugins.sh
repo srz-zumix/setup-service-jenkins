@@ -6,7 +6,4 @@ if [ -f "${PLUGIN_FILES}" ]; then
     echo '::group::jenkins plugin install'
     xargs -I{} jenkins-cli install-plugin {} < "${PLUGIN_FILES}"
     echo '::endgroup::'
-
-    # restart
-    "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
 fi
