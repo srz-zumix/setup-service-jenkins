@@ -33,6 +33,7 @@ version-resolver:
       - 'enhancement'
   patch:
     labels:
+      - 'improvement'
       - 'fix'
       - 'bug'
       - 'security'
