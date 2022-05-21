@@ -39,7 +39,7 @@ runs:
       env:
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
-        "${GITHUB_ACTION_PATH}/wait-launch.sh" "${{ inputs.id }}"
+        "${GITHUB_ACTION_PATH}/wait-launch.sh"
     - name: Setup CLI
       shell: bash
       env: 
@@ -87,7 +87,7 @@ runs:
         JCASC_PATH: ${{ inputs.jcasc_path }}
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
-        "${GITHUB_ACTION_PATH}/setup-jcasc.sh" "${{ inputs.id }}"
+        "${GITHUB_ACTION_PATH}/setup-jcasc.sh"
 
 branding:
   icon: 'settings'

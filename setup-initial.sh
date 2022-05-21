@@ -8,7 +8,7 @@ fi
 PREFIX="${TEMP}/jenkins/bin"
 
 mkdir -p "${PREFIX}"
-echo "${PREFIX}" >>"${GITHUB_PATH}"
+echo "${PREFIX}" >> "${GITHUB_PATH}"
 
 echo '::group::install tools'
 # docker log
@@ -45,7 +45,7 @@ echo '::endgroup::'
 
 echo '::group::jenkins initialize for JAVA_OPT'
 
-JENKINS_JAVA_OPTS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep JAVA_OPTS= | cut -d'=' -f2-)
+JENKINS_JAVA_OPTS=$(docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep JAVA_OPTS= | cut -d'=' -f2- || : )
 for opt_set in ${JENKINS_JAVA_OPTS}; do
   OPT=$(echo "${opt_set}" | cut -d'=' -f1)
   VAL=$(echo "${opt_set}" | cut -d'=' -f2-)
@@ -55,7 +55,6 @@ for opt_set in ${JENKINS_JAVA_OPTS}; do
     docker cp "${GITHUB_ACTION_PATH}/resources/logging.properties" "${JENKINS_SERVICE_ID}:${VAL}"
   fi
 done
-
 echo '::endgroup::'
 
 # restart
