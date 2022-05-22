@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 wait() {
   local attempt_max=5
   local -i attempt_num=1
