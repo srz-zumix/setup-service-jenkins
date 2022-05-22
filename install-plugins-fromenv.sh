@@ -2,6 +2,8 @@
 
 if [ -n "${INSTALL_PLUGINS}" ]; then
     echo '::group::jenkins plugin install'
-    echo "${INSTALL_PLUGINS}" | xargs -I{} jenkins-cli install-plugin {}
+    for plugin in ${INSTALL_PLUGINS}; do
+        jenkins-cli install-plugin "${plugin}"
+    done
     echo '::endgroup::'
 fi
