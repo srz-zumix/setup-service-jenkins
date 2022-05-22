@@ -15,6 +15,7 @@ echo "${PREFIX}" >>"${GITHUB_PATH}"
 echo '::group::docker inspect jenkins'
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep -v -e LANG -e JAVA_OPTS -e PATH -e JAVA_HOME > "${TEMP}/jenkins-env"
+# shellcheck source=/dev/null
 . "${TEMP}/jenkins-env"
 echo '::endgroup::'
 
