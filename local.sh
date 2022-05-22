@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euox pipefail
+set -euo pipefail
 
 program=$(basename "$0")
 readonly program
@@ -36,8 +36,15 @@ case $OPT in
 done
 
 JENKINS_URL="http://localhost:${PORT}"
+INSTALL_PLUGINS="job-dsl warnings-ng"
 
+export JENKINS_URL
 export JENKINS_SERVICE_ID
+export JCASC_PATH
+export INSTALL_PLUGINS
+export RUNNER_TEMP
+export GITHUB_PATH
+export GITHUB_ACTION_PATH
 
 stop() {
     docker container stop "${JENKINS_SERVICE_ID}" || :
@@ -57,17 +64,15 @@ stop
 
 docker run -d -p "${PORT}:8080" -p 50000:50000 --name "${JENKINS_SERVICE_ID}" "jenkins/jenkins:${IMAGE_TAGE}"
 
-. ./setup-initial.sh
+time ./setup-initial.sh
 setpath
-echo ${PATH}
-. ./wait-launch.sh
-. ./setup-cli.sh
+time ./wait-launch.sh
+time ./setup-cli.sh
 setpath
-. ./install-plugins.sh resources/DefaultJenkinsPlugins.txt
-INSTALL_PLUGINS="job-dsl warnings-ng"
-. ./install-plugins-fromenv.sh
-. ./restart-and-wait.sh
-. ./setup-jcasc.sh
+time ./install-plugins.sh resources/DefaultJenkinsPlugins.txt
+time ./install-plugins-fromenv.sh
+time ./restart-and-wait.sh
+time ./setup-jcasc.sh
 
 if [ "${CLEAN}" = "true" ]; then
     stop

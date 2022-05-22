@@ -26,7 +26,7 @@ if [ -z "${JENKINS_VERSION}" ]; then
 fi
 
 # skip setup wizard
-echo "${JENKINS_VERSION}"
+echo "jenkins versioin: ${JENKINS_VERSION}"
 echo "${JENKINS_VERSION}" > "${TEMP}/jenkins-version.txt"
 docker cp "${GITHUB_ACTION_PATH}/resources/init.groovy.d/setup-jenkins-init.groovy" "${JENKINS_SERVICE_ID}:${JENKINS_SHRE_REF}/init.groovy.d/setup-jenkins-init.groovy"
 
@@ -76,5 +76,7 @@ done
 echo '::endgroup::'
 
 # restart
+echo '::group::container restart'
 docker container restart "${JENKINS_SERVICE_ID}"
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
+echo '::endgroup::'
