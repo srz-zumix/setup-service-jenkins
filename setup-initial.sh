@@ -21,7 +21,7 @@ echo '::endgroup::'
 echo '::group::init'
 JENKINS_SHRE_REF=${REF:-/usr/share/jenkins/ref}
 if [ -z "${JENKINS_VERSION}" ]; then
-  JENKINS_VERSION=$(docker exec "${JENKINS_SERVICE_ID}" java -jar ${JENKINS_SHRE_REF}/../jenkins.war --version)
+  JENKINS_VERSION=$(docker exec "${JENKINS_SERVICE_ID}" java -jar "${JENKINS_SHRE_REF}/../jenkins.war" --version)
 fi
 
 # skip setup wizard
