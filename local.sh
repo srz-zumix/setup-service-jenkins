@@ -37,6 +37,8 @@ done
 
 JENKINS_URL="http://localhost:${PORT}"
 
+export JENKINS_SERVICE_ID
+
 stop() {
     docker container stop "${JENKINS_SERVICE_ID}" || :
     docker rm "${JENKINS_SERVICE_ID}" || :
@@ -63,10 +65,10 @@ echo ${PATH}
 setpath
 . ./install-plugins.sh resources/DefaultJenkinsPlugins.txt
 INSTALL_PLUGINS="job-dsl warnings-ng"
-. ./install-plugins-fromenv
+. ./install-plugins-fromenv.sh
 . ./restart-and-wait.sh
 . ./setup-jcasc.sh
 
-if [ "${CLEAN}" -eq "true" ]; then
+if [ "${CLEAN}" = "true" ]; then
     stop
 fi
