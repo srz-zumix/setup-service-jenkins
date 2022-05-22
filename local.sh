@@ -14,7 +14,7 @@ usage() {
 }
 
 JENKINS_SERVICE_ID=setup-jenkins
-IMAGE_TAGE=latest
+IMAGE_TAG=latest
 PORT=8080
 JCASC_PATH=testdata/jcasc
 CLEAN=false
@@ -62,7 +62,7 @@ echo . > "${GITHUB_PATH}"
 
 stop
 
-docker run -d -p "${PORT}:8080" -p 50000:50000 --name "${JENKINS_SERVICE_ID}" "jenkins/jenkins:${IMAGE_TAGE}"
+docker run -d -p "${PORT}:8080" -p 50000:50000 --name "${JENKINS_SERVICE_ID}" "jenkins/jenkins:${IMAGE_TAG}"
 
 time ./setup-initial.sh
 setpath
