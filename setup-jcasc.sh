@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 TEMP="${RUNNER_TEMP}"
 if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
@@ -9,7 +11,7 @@ TEMP_JCASC="${TEMP}/casc_configs"
 mkdir -p "${TEMP_JCASC}"
 
 SERVICE_JCASC_PATH_JAVAOPT=$(jenkins-cli-groovy 'println(System.getProperty("casc.jenkins.config", ""))')
-SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" printenv CASC_JENKINS_CONFIG)
+SERVICE_JCASC_PATH_ENV=$(docker exec "${JENKINS_SERVICE_ID}" printenv CASC_JENKINS_CONFIG || :)
 
 SERVICE_JCASC_PATH="${SERVICE_JCASC_PATH_JAVAOPT:-${SERVICE_JCASC_PATH_ENV}}"
 RELOAD=false
