@@ -1,22 +1,30 @@
 #!/bin/bash
 
+set -euo pipefail
+
 echo '::group::jenkins restart'
 
 # get session id
 PREV_ID=$(jenkins-cli session-id)
 
-wait() {
-    sleep 5
+restart_container() {
+    # jenkins-log
+    docker container restart "${JENKINS_SERVICE_ID}"
+    echo 'container restart'
+}
 
-    local attempt_max=4
+wait() {
+    local attempt_max=5
     local -i attempt_num=1
     until jenkins-cli session-id 2>/dev/null; do
-        sleep 30; echo "waiting jenkins response..."
+        sleep 20; echo "waiting jenkins response..."
         if ((attempt_num == 1)); then
-            jenkins-log
-            docker container restart "${JENKINS_SERVICE_ID}"
-            echo 'container restart'
+            restart_container
         else
+            STATUS=$(docker inspect --format='{{.State.Status}}' "${JENKINS_SERVICE_ID}")
+            if [ "${STATUS}" == "dead" ] || [ "${STATUS}" == "existed" ]; then
+                restart_container
+            fi
             if ((attempt_num == attempt_max)); then
                 jenkins-log
                 exit 1

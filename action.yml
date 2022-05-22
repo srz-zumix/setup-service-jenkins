@@ -31,6 +31,7 @@ runs:
     - name: Initial SetUp
       shell: bash
       env:
+        JENKINS_URL: http://localhost:${{ inputs.port }}
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-initial.sh"
