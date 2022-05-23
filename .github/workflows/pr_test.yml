@@ -54,7 +54,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Replace jcasc path
       run: |
-        find tests -name "testdata/**/*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
+        find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
