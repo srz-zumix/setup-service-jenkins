@@ -1,0 +1,31 @@
+pipelineJob('Test_GitHubToken') {
+  definition {
+    cps {
+        sandbox(true)
+        script('''
+pipeline {
+  agent any
+
+  stages {
+    stage("Checkout") {
+      steps {
+        checkout(
+            poll: false,
+            scm: [$class: 'GitSCM',
+                branches: [[name: "main"]],
+                extensions: [
+                    [$class: 'CloneOption', shallow: true],
+                    [$class: 'PruneStaleBranch'],
+                    [$class: 'PruneStaleTag', pruneTags: true],
+                ],
+                userRemoteConfigs: [[credentialsId: 'github_token', url: 'git@github.com:srz-zumix/setup-service-jenkins.git']]
+            ]
+        )
+      }
+    }
+  }
+}
+''')
+    }
+  }
+}

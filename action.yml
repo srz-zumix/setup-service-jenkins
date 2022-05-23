@@ -22,7 +22,11 @@ inputs:
     default: false
     required: false
   jcasc_path:
-    description: Jenkins Configuration as Code YAML path. (directory or file)
+    description: "Jenkins Configuration as Code YAML path. (directory or file)"
+    default: ''
+    required: false
+  github_token:
+    description: 'GITHUB_TOKEN'
     default: ''
     required: false
 runs:
@@ -89,6 +93,11 @@ runs:
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-jcasc.sh"
+    - name: Setup GitHub Token Credentials
+      shell: bash
+      if: "inputs.github_token != ''"
+      run: |
+        jenkins-credential -c StringCredentials -i github_token -- -t ${{ inputs.github_token }}
 
 branding:
   icon: 'settings'

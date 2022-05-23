@@ -47,6 +47,8 @@ jobs:
         ports:
           - 8080:8080
           - 50000:50000
+    env:
+      TEST_JOB: Test_GitHubToken
     steps:
     - name: clone
       uses: actions/checkout@v2
@@ -55,9 +57,17 @@ jobs:
         id: ${{ job.services.jenkins.id }}
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
+    - run: |
+        jenkins-cli list-jobs
+    - run: |
+        jenkins-cli build "${TEST_JOB}" -s
+    - run: |
+        jenkins-build-log "${TEST_JOB}"
+      if: success() || failure()
 
   setup-jenkins-default:
     runs-on: ubuntu-latest
