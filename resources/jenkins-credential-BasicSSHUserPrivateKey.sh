@@ -25,7 +25,7 @@ case $OPT in
     esac
 done
 
-PRIVATE_KEY=$(cat ${PRIVATE_KEY_FILE})
+PRIVATE_KEY=$(cat "${PRIVATE_KEY_FILE}")
 cat <<EOF
 <com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey>
   <scope>${SCOPE}</scope>
