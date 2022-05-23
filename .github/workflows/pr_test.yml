@@ -52,6 +52,9 @@ jobs:
     steps:
     - name: clone
       uses: actions/checkout@v2
+    - name: Replace jcasc path
+      run: |
+        find tests -name "testdata/**/*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
@@ -90,7 +93,9 @@ jobs:
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
-        plugins: job-dsl
+        plugins: |
+          job-dsl
+          workflow-job
         jcasc_path: testdata/jcasc
     - uses: ./.github/actions/composite/post-commands
       with:
