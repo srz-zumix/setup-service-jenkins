@@ -61,7 +61,7 @@ jobs:
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
         plugins: job-dsl
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.TEST_TOKEN }}
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}

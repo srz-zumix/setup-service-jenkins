@@ -18,7 +18,7 @@ pipeline {
                     [$class: 'PruneStaleBranch'],
                     [$class: 'PruneStaleTag', pruneTags: true],
                 ],
-                userRemoteConfigs: [[credentialsId: 'github_token', url: 'git@github.com:srz-zumix/setup-service-jenkins.git']]
+                userRemoteConfigs: [[credentialsId: 'github_token', url: 'https://github.com/srz-zumix/git-tips.git']]
             ]
         )
       }
