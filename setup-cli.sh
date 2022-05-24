@@ -11,6 +11,8 @@ PREFIX="${TEMP}/jenkins/bin"
 
 mkdir -p "${PREFIX}"
 
+echo '::group::install jenkins-cli wrapper and tools'
+
 curl -sSOL "${JENKINS_URL}/jnlpJars/jenkins-cli.jar"
 mv jenkins-cli.jar "${PREFIX}/jenkins-cli.jar"
 
@@ -38,6 +40,9 @@ cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-StringCredentials.sh" "${
 chmod +x "${PREFIX}/jenkins-credential-StringCredentials.sh"
 cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-UsernamePasswordCredentials.sh" "${PREFIX}/jenkins-credential-UsernamePasswordCredentials.sh"
 chmod +x "${PREFIX}/jenkins-credential-UsernamePasswordCredentials.sh"
+
+ls -l "${PREFIX}"
+echo '::endgroup::'
 
 echo '::group::jenkins-cli help'
 "${PREFIX}/jenkins-cli" help
