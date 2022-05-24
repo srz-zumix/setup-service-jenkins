@@ -31,10 +31,13 @@ chmod +x "${PREFIX}/jenkins-cli-groovyfile"
 sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
     "${GITHUB_ACTION_PATH}/resources/jenkins-credential.in" \
     > "${PREFIX}/jenkins-credential"
-cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-BasicSSHUserPrivateKey.sh" "${PREFIX}/jenkins-credential-BasicSSHUserPrivateKey.sh"
-cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-StringCredentials.sh" "${PREFIX}/jenkins-credential-StringCredentials.sh"
-cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-UsernamePasswordCredentials.sh" "${PREFIX}/jenkins-credential-UsernamePasswordCredentials.sh"
 chmod +x "${PREFIX}/jenkins-credential"
+cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-BasicSSHUserPrivateKey.sh" "${PREFIX}/jenkins-credential-BasicSSHUserPrivateKey.sh"
+chmod +x "${PREFIX}/jenkins-credential-BasicSSHUserPrivateKey.sh"
+cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-StringCredentials.sh" "${PREFIX}/jenkins-credential-StringCredentials.sh"
+chmod +x "${PREFIX}/jenkins-credential-StringCredentials.sh"
+cp "${GITHUB_ACTION_PATH}/resources/jenkins-credential-UsernamePasswordCredentials.sh" "${PREFIX}/jenkins-credential-UsernamePasswordCredentials.sh"
+chmod +x "${PREFIX}/jenkins-credential-UsernamePasswordCredentials.sh"
 
 echo '::group::jenkins-cli help'
 "${PREFIX}/jenkins-cli" help
