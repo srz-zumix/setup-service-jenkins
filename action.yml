@@ -97,7 +97,7 @@ runs:
       shell: bash
       if: "inputs.github_token != ''"
       run: |
-        jenkins-credential -c StringCredentials -i github_token -- -t ${{ inputs.github_token }}
+        jenkins-credential -c UsernamePasswordCredentials -i github_token -- -u x-access-token -p ${{ inputs.github_token }}
 
 branding:
   icon: 'settings'
