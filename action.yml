@@ -26,7 +26,7 @@ inputs:
     default: ''
     required: false
   github_token:
-    description: 'GITHUB_TOKEN'
+    description: 'GITHUB_TOKEN add to jenkins credential. (id = github_token)'
     default: ''
     required: false
 runs:
