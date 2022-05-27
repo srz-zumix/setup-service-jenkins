@@ -74,6 +74,10 @@ time ./install-plugins-fromenv.sh
 time ./restart-and-wait.sh
 time ./setup-jcasc.sh
 
+jenkins-credential -c StringCredentials -i github_token -- -t token
+jenkins-credential -c UsernamePasswordCredentials -i hoge_user_pass -- -u hoge -p password
+jenkins-credential -c BasicSSHUserPrivateKey -i hoge_ssh_key -- -u hoge -k LICENSE
+
 if [ "${CLEAN}" = "true" ]; then
     stop
 fi

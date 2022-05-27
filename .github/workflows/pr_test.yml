@@ -47,17 +47,31 @@ jobs:
         ports:
           - 8080:8080
           - 50000:50000
+    env:
+      TEST_JOB: Test_GitHubToken
     steps:
     - name: clone
       uses: actions/checkout@v2
+    - name: Replace jcasc path
+      run: |
+        find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
+        plugins: job-dsl
+        github_token: ${{ secrets.TEST_TOKEN }}
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
+    - run: |
+        jenkins-cli list-jobs
+    - run: |
+        jenkins-cli build "${TEST_JOB}" -s
+    - run: |
+        jenkins-build-log "${TEST_JOB}"
+      if: success() || failure()
 
   setup-jenkins-default:
     runs-on: ubuntu-latest
@@ -79,6 +93,9 @@ jobs:
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
+        plugins: |
+          job-dsl
+          workflow-job
         jcasc_path: testdata/jcasc
     - uses: ./.github/actions/composite/post-commands
       with:

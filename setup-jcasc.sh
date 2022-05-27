@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-TEMP="${RUNNER_TEMP}"
+TEMP="${RUNNER_TEMP:-}"
 if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
 fi
@@ -19,7 +19,7 @@ RELOAD=false
 if [ -z "${SERVICE_JCASC_PATH}" ]; then
   # ${JENKINS_HOME}/jenkins.yaml is jcasc default path
   JENKINS_HOME=$(jenkins-cli-groovy 'println(jenkins.model.Jenkins.instance.getRootDir())')
-  SERVICE_JCASC_PATH="${JENKINS_HOME}/casc_config/"
+  SERVICE_JCASC_PATH="${JENKINS_HOME}/casc_configs/"
   sed "s#@casc_path@#${SERVICE_JCASC_PATH}#g" "${GITHUB_ACTION_PATH}/resources/cascConfigPath.yaml.template" > "${TEMP}/jenkins.yaml"
   docker cp "${TEMP}/jenkins.yaml" "${JENKINS_SERVICE_ID}:${JENKINS_HOME}/jenkins.yaml"
   RELOAD=true
