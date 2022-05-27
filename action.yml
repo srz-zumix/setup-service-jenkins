@@ -1,5 +1,5 @@
-name: 'setup services jenkins container and install jenkins-cli.jar'
-description: 'Setup services jenkins container and install jenkins-cli.jar.'
+name: 'setup-service-jenkins'
+description: 'Setup services jenkins container and install jenkins-cli wrapper.'
 author: 'srz_zumix'
 inputs:
   id:
