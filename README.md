@@ -63,9 +63,9 @@ jobs:
         credentials:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-        env:
-          # disable setup wizard + JCasC load
-          JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/jenkins_home/casc_configs
+        # env:
+        #   # Set JCasC path (default is /var/jenkins_home/casc_configs)
+        #   JAVA_OPTS: -Dcasc.jenkins.config=/var/jenkins_home/jcasc
         ports:
           - 8080:8080
           - 50000:50000
