@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       jenkins:
-        image: jenkins/jenkins:lts-jdk11
+        image: jenkins/jenkins:latest
         credentials:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
