@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euox pipefail
+set -euo pipefail
 
 TEMP="${RUNNER_TEMP:-}"
 if [ -z "${TEMP}" ]; then
@@ -18,7 +18,7 @@ echo "${PREFIX}" >>"${GITHUB_PATH}"
 curl -sSOL "${JENKINS_URL}/jnlpJars/jenkins-cli.jar"
 mv jenkins-cli.jar "${PREFIX}/jenkins-cli.jar"
 
-if docker exec -it "${JENKINS_SERVICE_ID}" test -f /opt/jenkins-plugin-manager.jar > /dev/null; then
+if docker exec "${JENKINS_SERVICE_ID}" test -f /opt/jenkins-plugin-manager.jar > /dev/null; then
   :
 else
   PLUGIN_CLI_DOWNLOAD_URL=$(curl -sSL "https://api.github.com/repos/jenkinsci/plugin-installation-manager-tool/releases/latest" | grep browser_download_url | grep jar | cut -d: -f2- | xargs echo)
@@ -28,13 +28,14 @@ else
   rm -f "${PREFIX}/jenkins-plugin-manager.jar"
 fi
 
-if docker exec -it "${JENKINS_SERVICE_ID}" which jenkins-plugin-cli > /dev/null; then
+if docker exec "${JENKINS_SERVICE_ID}" which jenkins-plugin-cli > /dev/null; then
   :
 else
   cat > "${PREFIX}/jenkins-plugin-cli" <<EOF
 #!/bin/bash
 exec java -jar /opt/jenkins-plugin-manager.jar "\$@"
 EOF
+  chmod +x "${PREFIX}/jenkins-plugin-cli"
   docker cp "${PREFIX}/jenkins-plugin-cli" "${JENKINS_SERVICE_ID}:/bin/jenkins-plugin-cli"
   rm -f "${PREFIX}/jenkins-plugin-cli"
 fi
