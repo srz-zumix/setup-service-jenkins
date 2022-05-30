@@ -11,6 +11,7 @@ setup github actions services jenkins container and jenkins-cli wrapper
 | jenkins-credential        | Add to jenkins credential. |
 | jenkins-download-artifact | Download jenkins job artifact. |
 | jenkins-log               | Print service jenkins docker logs. |
+| jenkins-plugin-cli        | [jenkins-plugin-manager][] warpper. |
 
 ## Inputs
 
@@ -28,7 +29,9 @@ Optional. Jenkins plugins list. Default is empty.
 
 ### `plugins_file`
 
-Optional. Jenkins plugins list file. Default is empty.
+Optional. Jenkins plugins list file. (.txt or .yaml|yml) Default is empty.
+
+support [jenkins-plugin-manager][] file format.
 
 ### `install_suggested_plugins`
 
@@ -59,6 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       jenkins:
+        # https://hub.docker.com/r/jenkins/jenkins
         image: jenkins/jenkins:latest
         credentials:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -83,3 +87,6 @@ jobs:
     - run: |
         jenkins-cli list-plugins
 ```
+
+
+[jenkins-plugin-manager]:https://github.com/jenkinsci/plugin-installation-manager-tool

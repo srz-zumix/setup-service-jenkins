@@ -23,6 +23,7 @@ jobs:
         id: ${{ job.services.jenkins.id }}
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
+        plugins_file: testdata/plugins.yml
         plugins: |
           job-dsl
           warnings-ng

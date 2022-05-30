@@ -14,7 +14,7 @@ inputs:
     default: ''
     required: false
   plugins_file:
-    description: "install plugin list file"
+    description: "install plugin list file. (.txt or .yaml|yml)"
     default: ''
     required: false
   install_suggested_plugins:

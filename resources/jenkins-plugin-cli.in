@@ -1,0 +1,36 @@
+#!/bin/bash
+
+JENKINS_SERVICE_ID=@container_id@
+
+
+copy_plugins_file() {
+    PLUGIN_FILE=$1
+    TEMP="${RUNNER_TEMP:-}"
+    if [ -z "${TEMP}" ]; then
+        TEMP="$(mktemp -d)"
+    fi
+
+    PREFIX="${TEMP}/jenkins/plugins_file"
+    mkdir -p $(dirname "${PREFIX}/${PLUGIN_FILE}")
+    cp "${PLUGIN_FILE}" "${PREFIX}/${PLUGIN_FILE}"
+    docker cp "${PREFIX}/." "${JENKINS_SERVICE_ID}:/tmp"
+}
+
+
+parse_params() {
+    while :; do
+        case "${1-}" in
+        -f | --plugin-file)
+            copy_plugins_file "${2-}"
+            shift
+            ;;
+        *) break ;;
+        esac
+        shift
+    done
+    return 0
+}
+
+parse_params "$@"
+
+docker exec -it -w /tmp "${JENKINS_SERVICE_ID}" jenkins-plugin-cli "$@"

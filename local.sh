@@ -70,6 +70,7 @@ time ./wait-launch.sh
 time ./setup-cli.sh
 setpath
 time ./install-plugins.sh resources/DefaultJenkinsPlugins.txt
+time ./install-plugins.sh testdata/plugins.yml
 time ./install-plugins-fromenv.sh
 time ./restart-and-wait.sh
 time ./setup-jcasc.sh
