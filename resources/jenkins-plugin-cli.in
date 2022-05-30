@@ -11,7 +11,8 @@ copy_plugins_file() {
     fi
 
     PREFIX="${TEMP}/jenkins/plugins_file"
-    mkdir -p $(dirname "${PREFIX}/${PLUGIN_FILE}")
+    PLUGINFILE_DIR=$(dirname "${PREFIX}/${PLUGIN_FILE}")
+    mkdir -p "${PLUGINFILE_DIR}"
     cp "${PLUGIN_FILE}" "${PREFIX}/${PLUGIN_FILE}"
     docker cp "${PREFIX}/." "${JENKINS_SERVICE_ID}:/tmp"
 }
@@ -33,4 +34,4 @@ parse_params() {
 
 parse_params "$@"
 
-docker exec -it -w /tmp "${JENKINS_SERVICE_ID}" jenkins-plugin-cli "$@"
+docker exec -w /tmp "${JENKINS_SERVICE_ID}" jenkins-plugin-cli "$@"
