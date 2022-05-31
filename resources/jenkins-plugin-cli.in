@@ -1,7 +1,8 @@
 #!/bin/bash
 
-JENKINS_SERVICE_ID=@container_id@
+set -euo pipefail
 
+JENKINS_SERVICE_ID=@container_id@
 
 copy_plugins_file() {
     PLUGIN_FILE=$1
@@ -17,18 +18,21 @@ copy_plugins_file() {
     docker cp "${PREFIX}/${PLUGINFILE_BASENAME}" "${JENKINS_SERVICE_ID}:/tmp/${PLUGINFILE_BASENAME}"
 }
 
-
 parse_params() {
     docker_args=()
     while :; do
-        docker_args+=( "${1-}" )
         case "${1-}" in
         -f | --plugin-file)
             copy_plugins_file "${2-}"
+            docker_args+=( "${1-}" )
             docker_args+=( "/tmp/${PLUGINFILE_BASENAME}" )
             shift
             ;;
-        *) break ;;
+        "")
+            break;;
+        *)
+            docker_args+=( "${1-}" )
+            ;;
         esac
         shift
     done
