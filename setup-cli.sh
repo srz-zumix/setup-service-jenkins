@@ -76,5 +76,5 @@ echo '::group::jenkins-cli help'
 echo '::endgroup::'
 
 echo '::group::jenkins-plugin-cli help'
-"${PREFIX}/jenkins-plugin-cli"
+"${PREFIX}/jenkins-plugin-cli" --help
 echo '::endgroup::'
