@@ -13,16 +13,43 @@ mkdir -p "${PREFIX}"
 
 echo '::group::install jenkins-cli wrapper and tools'
 
+echo "${PREFIX}" >>"${GITHUB_PATH}"
+
 curl -sSOL "${JENKINS_URL}/jnlpJars/jenkins-cli.jar"
 mv jenkins-cli.jar "${PREFIX}/jenkins-cli.jar"
 
-echo "${PREFIX}" >>"${GITHUB_PATH}"
+if docker exec "${JENKINS_SERVICE_ID}" test -f /opt/jenkins-plugin-manager.jar > /dev/null; then
+  :
+else
+  PLUGIN_CLI_DOWNLOAD_URL=$(curl -sSL "https://api.github.com/repos/jenkinsci/plugin-installation-manager-tool/releases/latest" | grep browser_download_url | grep jar | cut -d: -f2- | xargs echo)
+  curl -sSOL "${PLUGIN_CLI_DOWNLOAD_URL}"
+  mv jenkins-plugin-manager-*.jar "${PREFIX}/jenkins-plugin-manager.jar"
+  docker cp "${PREFIX}/jenkins-plugin-manager.jar" "${JENKINS_SERVICE_ID}:/opt/jenkins-plugin-manager.jar"
+  rm -f "${PREFIX}/jenkins-plugin-manager.jar"
+fi
+
+if docker exec "${JENKINS_SERVICE_ID}" which jenkins-plugin-cli > /dev/null; then
+  :
+else
+  cat > "${PREFIX}/jenkins-plugin-cli" <<EOF
+#!/bin/bash
+exec java -jar /opt/jenkins-plugin-manager.jar "\$@"
+EOF
+  chmod +x "${PREFIX}/jenkins-plugin-cli"
+  docker cp "${PREFIX}/jenkins-plugin-cli" "${JENKINS_SERVICE_ID}:/bin/jenkins-plugin-cli"
+  rm -f "${PREFIX}/jenkins-plugin-cli"
+fi
 
 sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
     -e "s#@jenkins_cli_jar@#${PREFIX}/jenkins-cli.jar#g" \
     "${GITHUB_ACTION_PATH}/resources/jenkins-cli.in" \
     > "${PREFIX}/jenkins-cli"
 chmod +x "${PREFIX}/jenkins-cli"
+
+sed -e "s#@container_id@#${JENKINS_SERVICE_ID}#g" \
+    "${GITHUB_ACTION_PATH}/resources/jenkins-plugin-cli.in" \
+    > "${PREFIX}/jenkins-plugin-cli"
+chmod +x "${PREFIX}/jenkins-plugin-cli"
 
 cp "${GITHUB_ACTION_PATH}/resources/jenkins-cli-groovy" "${PREFIX}/jenkins-cli-groovy"
 chmod +x "${PREFIX}/jenkins-cli-groovy"
@@ -46,4 +73,8 @@ echo '::endgroup::'
 
 echo '::group::jenkins-cli help'
 "${PREFIX}/jenkins-cli" help
+echo '::endgroup::'
+
+echo '::group::jenkins-plugin-cli help'
+"${PREFIX}/jenkins-plugin-cli" --help
 echo '::endgroup::'

@@ -1,0 +1,18 @@
+plugins:
+  - artifactId: git
+    source:
+      version: latest
+  - artifactId: job-import-plugin
+    source:
+      version: 2.1
+  - artifactId: docker
+  - artifactId: cloudbees-bitbucket-branch-source
+    source:
+      version: 2.4.4
+  - artifactId: script-security
+    source:
+      url: http://ftp-chi.osuosl.org/pub/jenkins/plugins/script-security/1.56/script-security.hpi
+  - artifactId: workflow-step-api
+    groupId: org.jenkins-ci.plugins.workflow
+    source:
+      version: 2.19-rc289.d09828a05a74

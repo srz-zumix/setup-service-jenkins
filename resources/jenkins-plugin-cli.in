@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -euo pipefail
+
+JENKINS_SERVICE_ID=@container_id@
+
+copy_plugins_file() {
+    PLUGIN_FILE=$1
+    TEMP="${RUNNER_TEMP:-}"
+    if [ -z "${TEMP}" ]; then
+        TEMP="$(mktemp -d)"
+    fi
+
+    PREFIX="${TEMP}/jenkins/plugins_file"
+    PLUGINFILE_BASENAME=$(basename "${PLUGIN_FILE}")
+    mkdir -p "${PREFIX}"
+    cp "${PLUGIN_FILE}" "${PREFIX}/${PLUGINFILE_BASENAME}"
+    docker cp "${PREFIX}/${PLUGINFILE_BASENAME}" "${JENKINS_SERVICE_ID}:/tmp/${PLUGINFILE_BASENAME}"
+}
+
+parse_params() {
+    docker_args=()
+    while :; do
+        case "${1-}" in
+        -f | --plugin-file)
+            copy_plugins_file "${2-}"
+            docker_args+=( "${1-}" )
+            docker_args+=( "/tmp/${PLUGINFILE_BASENAME}" )
+            shift
+            ;;
+        "")
+            break;;
+        *)
+            docker_args+=( "${1-}" )
+            ;;
+        esac
+        shift
+    done
+    return 0
+}
+
+parse_params "$@"
+
+docker exec -w /tmp "${JENKINS_SERVICE_ID}" jenkins-plugin-cli "${docker_args[@]}"
