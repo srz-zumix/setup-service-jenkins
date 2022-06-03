@@ -7,7 +7,7 @@ inputs:
     required: true
   port:
     description: "jenkins service container port"
-    default: '8080'
+    default: 8080
     required: false
   plugins:
     description: "install plugin list"
