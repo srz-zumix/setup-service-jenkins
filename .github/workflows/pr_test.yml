@@ -56,8 +56,6 @@ jobs:
           - 50000:50000
       agent1:
         image: ubuntu:latest
-        ports:
-          - 8081:8080
     env:
       TEST_JOB: Test_GitHubToken
     steps:
@@ -69,6 +67,7 @@ jobs:
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
+        port: ${{ job.services.jenkins.ports[8080] }}
         nodes: |
           ${{ job.services.agent1.id }}
         jcasc_path: testdata/jcasc
