@@ -25,10 +25,15 @@ inputs:
     description: "Jenkins Configuration as Code YAML path. (directory or file)"
     default: ''
     required: false
+  nodes:
+    description: 'Jenkins node container ids.'
+    default: ''
+    required: false
   github_token:
     description: 'GITHUB_TOKEN add to jenkins credential. (id = github_token)'
     default: ''
     required: false
+
 runs:
   using: "composite"
   steps:
@@ -98,6 +103,15 @@ runs:
       if: "inputs.github_token != ''"
       run: |
         jenkins-credential -c UsernamePasswordCredentials -i github_token -- -u x-access-token -p ${{ inputs.github_token }}
+    - name: Setup Jenkins nodes
+      shell: bash
+      env: 
+        JENKINS_URL: http://localhost:${{ inputs.port }}
+        JENKINS_SERVICE_ID: ${{ inputs.id }}
+        JENKINS_NODES: ${{ inputs.nodes }}
+      if: "inputs.nodes != ''"
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-nodes.sh"
 
 branding:
   icon: 'settings'
