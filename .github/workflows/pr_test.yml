@@ -67,7 +67,7 @@ jobs:
     - uses: ./
       with:
         id: ${{ job.services.jenkins.id }}
-        port: ${{ job.services.jenkins.ports[8080] }}
+        # port: ${{ job.services.jenkins.ports[8080] }}
         nodes: |
           ${{ job.services.agent1.id }}
         jcasc_path: testdata/jcasc
