@@ -35,13 +35,13 @@ case $OPT in
     esac
 done
 
-JENKINS_SERVICE_NAME=jenkins
+JENKINS_SERVICE_NAME=localhost
 JENKINS_SERVICE_ID=setup-jenkins
 INSTALL_PLUGINS="job-dsl warnings-ng"
 
 JOB_SERVICES_CONTEXT_JSON=$(cat <<EOS
 {
-    "jenkins": {
+    "${JENKINS_SERVICE_NAME}": {
         "id": "${JENKINS_SERVICE_ID}",
         "ports": {
             "50000": "50000",
@@ -73,11 +73,9 @@ stop() {
 }
 
 setpath() {
-    GITHUB_PATH_=$(tr '\n' ':' < ${GITHUB_PATH})
+    GITHUB_PATH_=$(tr '\n' ':' < "${GITHUB_PATH}")
     PATH=${GITHUB_PATH_}:${PATH}
     export PATH
-
-    . "${GITHUB_ENV}"
 }
 
 mkdir -p "${RUNNER_TEMP}"
@@ -90,6 +88,10 @@ docker run -d -p "${PORT}:8080" -p 50000:50000 --name "${JENKINS_SERVICE_ID}" "j
 
 time ./setup-initial.sh
 setpath
+. "${GITHUB_ENV}"
+export JENKINS_URL
+export JENKINS_SERVICE_ID
+
 time ./wait-launch.sh
 time ./setup-cli.sh
 setpath
