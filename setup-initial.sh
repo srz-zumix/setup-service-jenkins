@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -euox pipefail
 
 TEMP="${RUNNER_TEMP:-}"
 if [ -z "${TEMP}" ]; then
