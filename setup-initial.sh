@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euox pipefail
+set -euo pipefail
 
 TEMP="${RUNNER_TEMP:-}"
 if [ -z "${TEMP}" ]; then
@@ -17,7 +17,8 @@ JENKINS_SERVICE_PORT=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_S
 if [ -f /.dockerenv ]; then
   JENKINS_URL="http://${JENKINS_SERVICE_NAME}:${JENKINS_SERVICE_PORT}"
 else
-  JENKINS_URL="http://localhost:${JENKINS_SERVICE_PORT}"
+  JENKINS_SERVICE_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${JENKINS_SERVICE_ID}")
+  JENKINS_URL="http://${JENKINS_SERVICE_IP}:${JENKINS_SERVICE_PORT}"
 fi
 
 echo "JENKINS_URL=${JENKINS_URL}" >> "${GITHUB_ENV}"
