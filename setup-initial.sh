@@ -12,8 +12,13 @@ PREFIX="${TEMP}/jenkins/bin"
 mkdir -p "${PREFIX}"
 echo "${PREFIX}" >> "${GITHUB_PATH}"
 
+JENKINS_SERVICE_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".services.${JENKINS_SERVICE_NAME}.id")
+JENKINS_SERVICE_PORT=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".services.${JENKINS_SERVICE_NAME}.ports[\"8080\"]")
+JENKINS_URL="http://${JENKINS_SERVICE_NAME}:${JENKINS_SERVICE_PORT}"
+
 echo "JENKINS_URL=${JENKINS_URL}" >> "${GITHUB_ENV}"
 echo "JENKINS_SERVICE_ID=${JENKINS_SERVICE_ID}" >> "${GITHUB_ENV}"
+echo "JENKINS_SERVICE_PORT=${JENKINS_SERVICE_PORT}" >> "${GITHUB_ENV}"
 
 echo '::group::detect jenkins service config'
 

@@ -5,10 +5,6 @@ inputs:
   name:
     description: "jenkins service container name"
     required: true
-  port:
-    description: "jenkins service container port"
-    default: ${{ job.services["jenkins"].ports[8080] }}
-    required: false
   plugins:
     description: "install plugin list"
     default: ''
@@ -41,8 +37,7 @@ runs:
       shell: bash
       env:
         JENKINS_SERVICE_NAME: ${{ inputs.name }}
-        JENKINS_URL: 'http://${{ inputs.name }}:${{ fromJSON("\"job\": { \"services\": { \"inputs.name\": { \"ports\": \"8080\" } } }") }}'
-        JENKINS_SERVICE_ID: '${{ fromJSON("\"job\": { \"services\": { \"inputs.name\": \"id\"} }") }}'
+        JOB_SERVICES_CONTEXT_JSON: ${{ toJSON(job.services) }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-initial.sh"
     - name: Wait Launch Jenkins
@@ -93,6 +88,7 @@ runs:
     - name: Setup Jenkins nodes
       shell: bash
       env:
+        JOB_SERVICES_CONTEXT_JSON: ${{ toJSON(job.services) }}
         JENKINS_NODES: ${{ inputs.nodes }}
       if: "inputs.nodes != ''"
       run: |

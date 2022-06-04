@@ -15,13 +15,9 @@ setup github actions services jenkins container and jenkins-cli wrapper
 
 ## Inputs
 
-### `id`
+### `name`
 
-Required. Jenkins service container id.
-
-### `port`
-
-Optional. Jenkins service container port. Default is `8080`.
+Required. Jenkins service container name.
 
 ### `plugins`
 
@@ -78,7 +74,7 @@ jobs:
       uses: actions/checkout@v2
     - uses: srz-zumix/setup-service-jenkins@v1
       with:
-        id: "${{ job.services.jenkins.id }}"
+        name: jenkins
         install_suggested_plugins: true
         plugins: |
           job-dsl
@@ -87,6 +83,5 @@ jobs:
     - run: |
         jenkins-cli list-plugins
 ```
-
 
 [jenkins-plugin-manager]:https://github.com/jenkinsci/plugin-installation-manager-tool

@@ -13,7 +13,6 @@ usage() {
     exit 1
 }
 
-JENKINS_SERVICE_ID=setup-jenkins
 IMAGE_TAG=latest
 PORT=8080
 JCASC_PATH=testdata/jcasc
@@ -36,13 +35,33 @@ case $OPT in
     esac
 done
 
-JENKINS_SERVICE_NAME=
-JENKINS_URL="http://localhost:${PORT}"
+JENKINS_SERVICE_NAME=jenkins
+JENKINS_SERVICE_ID=setup-jenkins
 INSTALL_PLUGINS="job-dsl warnings-ng"
 
+JOB_SERVICES_CONTEXT_JSON=$(cat <<EOS
+{
+    "services": {
+        "jenkins": {
+            "id": "${JENKINS_SERVICE_ID}",
+            "ports": {
+                "50000": "50000",
+                "8080": "${PORT}"
+            },
+            "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
+        },
+        "agent1": {
+            "id": "9eb30e83a05b7332762c4c8bf74b3543dfbf911d8c37d49fabf3bd0886a23795",
+            "ports": {},
+            "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
+        }
+    }
+}
+EOS
+)
+
+export JOB_SERVICES_CONTEXT_JSON
 export JENKINS_SERVICE_NAME
-export JENKINS_URL
-export JENKINS_SERVICE_ID
 export JCASC_PATH
 export INSTALL_PLUGINS
 export RUNNER_TEMP
@@ -65,7 +84,7 @@ setpath() {
 
 mkdir -p "${RUNNER_TEMP}"
 echo . > "${GITHUB_PATH}"
-echo . > "${GITHUB_ENV}"
+echo "CI=true" > "${GITHUB_ENV}"
 
 stop
 
