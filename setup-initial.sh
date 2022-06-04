@@ -12,7 +12,8 @@ PREFIX="${TEMP}/jenkins/bin"
 mkdir -p "${PREFIX}"
 echo "${PREFIX}" >> "${GITHUB_PATH}"
 
-echo '::group::docker inspect jenkins'
+echo '::group::detect jenkins service config'
+
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep -v -e LANG -e JAVA_OPTS -e PATH -e JAVA_HOME > "${TEMP}/jenkins-env"
 # shellcheck source=/dev/null

@@ -2,12 +2,15 @@ name: 'setup-service-jenkins'
 description: 'Setup services jenkins container and install jenkins-cli wrapper.'
 author: 'srz_zumix'
 inputs:
+  name:
+    description: "jenkins service container name"
+    required: true
   id:
     description: "jenkins service container id"
     required: true
   port:
     description: "jenkins service container port"
-    default: 8080
+    default: ${{ job.services["inputs.name"].ports[8080] }}
     required: false
   plugins:
     description: "install plugin list"
@@ -26,7 +29,7 @@ inputs:
     default: ''
     required: false
   nodes:
-    description: 'Jenkins node container ids.'
+    description: 'Jenkins node container names.'
     default: ''
     required: false
   github_token:
@@ -40,7 +43,9 @@ runs:
     - name: Initial SetUp
       shell: bash
       env:
-        JENKINS_URL: http://localhost:${{ inputs.port }}
+        JENKINS_SERVICE_NAME: ${{ inputs.name }}
+        JOB_CONTEXT: ${{ inputs.job_context }}
+        JENKINS_URL: http://${{ inputs.name }}:${{ inputs.port }}
         JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-initial.sh"
