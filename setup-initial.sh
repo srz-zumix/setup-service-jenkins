@@ -12,6 +12,8 @@ PREFIX="${TEMP}/jenkins/bin"
 mkdir -p "${PREFIX}"
 echo "${PREFIX}" >> "${GITHUB_PATH}"
 
+echo "JENKINS_URL=${JENKINS_URL}" >> $GITHUB_ENV
+
 echo '::group::detect jenkins service config'
 
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"

@@ -10,7 +10,7 @@ inputs:
     required: true
   port:
     description: "jenkins service container port"
-    default: ${{ job.services["inputs.name"].ports[8080] }}
+    default: ${{ job.services["jenkins"].ports[8080] }}
     required: false
   plugins:
     description: "install plugin list"

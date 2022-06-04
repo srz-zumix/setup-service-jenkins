@@ -21,6 +21,7 @@ CLEAN=false
 
 RUNNER_TEMP=tmp
 GITHUB_PATH=${RUNNER_TEMP}/GITHUB_PATH
+GITHUB_ENV=${RUNNER_TEMP}/GITHUB_ENV
 GITHUB_ACTION_PATH=.
 
 while getopts c:p:t:xh OPT
@@ -44,6 +45,7 @@ export JCASC_PATH
 export INSTALL_PLUGINS
 export RUNNER_TEMP
 export GITHUB_PATH
+export GITHUB_ENV
 export GITHUB_ACTION_PATH
 
 stop() {
@@ -55,10 +57,13 @@ setpath() {
     GITHUB_PATH_=$(tr '\n' ':' < ${GITHUB_PATH})
     PATH=${GITHUB_PATH_}:${PATH}
     export PATH
+
+    . "${GITHUB_ENV}"
 }
 
 mkdir -p "${RUNNER_TEMP}"
 echo . > "${GITHUB_PATH}"
+echo . > "${GITHUB_ENV}"
 
 stop
 
