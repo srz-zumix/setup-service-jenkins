@@ -55,7 +55,7 @@ jobs:
           - 8080:8080
           - 50000:50000
       agent1:
-        image: ubuntu:latest
+        image: jenkins/jenkins:lts-jdk11
     env:
       TEST_JOB: Test_GitHubToken
     steps:
