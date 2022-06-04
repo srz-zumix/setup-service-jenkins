@@ -36,9 +36,11 @@ case $OPT in
     esac
 done
 
+JENKINS_SERVICE_NAME=
 JENKINS_URL="http://localhost:${PORT}"
 INSTALL_PLUGINS="job-dsl warnings-ng"
 
+export JENKINS_SERVICE_NAME
 export JENKINS_URL
 export JENKINS_SERVICE_ID
 export JCASC_PATH
