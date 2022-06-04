@@ -41,20 +41,18 @@ INSTALL_PLUGINS="job-dsl warnings-ng"
 
 JOB_SERVICES_CONTEXT_JSON=$(cat <<EOS
 {
-    "services": {
-        "jenkins": {
-            "id": "${JENKINS_SERVICE_ID}",
-            "ports": {
-                "50000": "50000",
-                "8080": "${PORT}"
-            },
-            "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
+    "jenkins": {
+        "id": "${JENKINS_SERVICE_ID}",
+        "ports": {
+            "50000": "50000",
+            "8080": "${PORT}"
         },
-        "agent1": {
-            "id": "9eb30e83a05b7332762c4c8bf74b3543dfbf911d8c37d49fabf3bd0886a23795",
-            "ports": {},
-            "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
-        }
+        "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
+    },
+    "agent1": {
+        "id": "9eb30e83a05b7332762c4c8bf74b3543dfbf911d8c37d49fabf3bd0886a23795",
+        "ports": {},
+        "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
     }
 }
 EOS
