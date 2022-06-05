@@ -64,12 +64,9 @@ jobs:
     - name: Replace jcasc path
       run: |
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
-    - run: |
-        tcpdump -i any -U -w tcpdump.log tcp port 8080 &
     - uses: ./
       with:
         name: jenkins
-        # port: ${{ job.services.jenkins.ports[8080] }}
         nodes: |
           agent1
         jcasc_path: testdata/jcasc
@@ -91,10 +88,6 @@ jobs:
     - name: Build log
       run: |
         jenkins-build-log "${TEST_JOB}"
-      if: success() || failure()
-    - name: tcpdump log
-      run: |
-        cat tcpdump.log
       if: success() || failure()
 
   setup-jenkins-default:
