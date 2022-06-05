@@ -13,7 +13,7 @@ jobs:
         # env:
         #   JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Djava.util.logging.config.file=/var/jenkins_home/logging.properties
         ports:
-          - 8080:8080
+          - 8081:8080
           - 50000:50000
     steps:
     - name: clone
