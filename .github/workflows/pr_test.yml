@@ -91,6 +91,9 @@ jobs:
     - name: Build log
       run: |
         jenkins-build-log "${TEST_JOB}"
+      if: success() || failure()
+    - name: tcpdump log
+      run: |
         cat tcpdump.log
       if: success() || failure()
 
