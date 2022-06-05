@@ -67,7 +67,7 @@ jobs:
     - run: |
         docker exec -u root ${{ job.services.jenkins.id }} apt-get update
         docker exec -u root ${{ job.services.jenkins.id }} apt-get install -y tcpdump
-        docker exec -u root ${{ job.services.jenkins.id }} tcpdump -i any -U -w tcpdump.log tcp port 8080
+        docker exec -u root -d ${{ job.services.jenkins.id }} tcpdump -i any -U -w tcpdump.log tcp port 8080
     - uses: ./
       with:
         name: jenkins
