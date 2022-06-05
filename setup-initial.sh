@@ -22,7 +22,6 @@ if [ -f /.dockerenv ]; then
   JENKINS_URL="http://${JENKINS_SERVICE_NAME}:${JENKINS_SERVICE_PORT}"
 else
   JENKINS_SERVICE_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${JENKINS_SERVICE_ID}")
-  ping -c 1 "${JENKINS_SERVICE_IP}"
   JENKINS_URL="http://localhost:${JENKINS_SERVICE_PORT}"
   # JENKINS_URL="http://${JENKINS_SERVICE_IP}:${JENKINS_SERVICE_PORT}"
 fi
