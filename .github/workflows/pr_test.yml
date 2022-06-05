@@ -66,7 +66,7 @@ jobs:
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
     - run: |
         docker exec -u root ${{ job.services.jenkins.id }} apt-get update
-        docker exec -u root ${{ job.services.jenkins.id }} apt-get install -y net-tools
+        docker exec -u root ${{ job.services.jenkins.id }} apt-get install -y tcpdump
         docker exec -u root ${{ job.services.jenkins.id }} tcpdump -i any -U -w tcpdump.log tcp port 8080
     - uses: ./
       with:
