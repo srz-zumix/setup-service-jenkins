@@ -55,7 +55,7 @@ jobs:
           - 8080:8080
           - 50000:50000
       agent1:
-        image: jenkins/jenkins:lts-jdk11
+        image: jenkins/jnlp-agent-jdk11
     env:
       TEST_JOB: Test_GitHubToken
     steps:
@@ -64,6 +64,8 @@ jobs:
     - name: Replace jcasc path
       run: |
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
+    - run: |
+        tcpdump -i any -U -w tcpdump.log tcp port 8080 &
     - uses: ./
       with:
         name: jenkins
@@ -89,6 +91,7 @@ jobs:
     - name: Build log
       run: |
         jenkins-build-log "${TEST_JOB}"
+        cat tcpdump.log
       if: success() || failure()
 
   setup-jenkins-default:
