@@ -99,4 +99,5 @@ echo '::endgroup::'
 echo '::group::container restart'
 docker container restart "${JENKINS_SERVICE_ID}"
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
+docker network inspect "${CONTAINER_NETWORK}"
 echo '::endgroup::'
