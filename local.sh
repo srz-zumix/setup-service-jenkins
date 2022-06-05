@@ -88,6 +88,7 @@ docker run -d -p "${PORT}:8080" -p 50000:50000 --name "${JENKINS_SERVICE_ID}" "j
 
 time ./setup-initial.sh
 setpath
+# shellcheck disable=SC2086
 . "${GITHUB_ENV}"
 export JENKINS_URL
 export JENKINS_SERVICE_ID
