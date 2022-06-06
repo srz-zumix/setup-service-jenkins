@@ -13,7 +13,7 @@ jobs:
         # env:
         #   JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Djava.util.logging.config.file=/var/jenkins_home/logging.properties
         ports:
-          - 8081:8080
+          - 8080:8080
           - 50000:50000
     steps:
     - name: clone
@@ -52,7 +52,7 @@ jobs:
           # disable setup wizard + JCasC path
           JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/casc_configs
         ports:
-          - 8080:8080
+          - 8081:8080
           - 50000:50000
       agent1:
         image: jenkins/jnlp-agent-jdk11
@@ -64,10 +64,6 @@ jobs:
     - name: Replace jcasc path
       run: |
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
-    - run: |
-        docker exec -u root ${{ job.services.jenkins.id }} apt-get update
-        docker exec -u root ${{ job.services.jenkins.id }} apt-get install -y tcpdump
-        docker exec -u root -d ${{ job.services.jenkins.id }} tcpdump -i any -U -w tcpdump.log tcp port 8080
     - uses: ./
       with:
         name: jenkins
@@ -92,11 +88,6 @@ jobs:
     - name: Build log
       run: |
         jenkins-build-log "${TEST_JOB}"
-      if: success() || failure()
-    - name: tcpdump log
-      run: |
-        docker exec -u root ${{ job.services.jenkins.id }} cat tcpdump.log
-        # cat tcpdump.log
       if: success() || failure()
 
   setup-jenkins-default:
