@@ -30,8 +30,6 @@ echo "JENKINS_URL=${JENKINS_URL}" >> "${GITHUB_ENV}"
 echo "JENKINS_SERVICE_ID=${JENKINS_SERVICE_ID}" >> "${GITHUB_ENV}"
 echo "JENKINS_SERVICE_PORT=${JENKINS_SERVICE_PORT}" >> "${GITHUB_ENV}"
 
-curl -sSOL "${JENKINS_URL}/jnlpJars/jenkins-cli.jar"
-
 echo '::group::detect jenkins service config'
 
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"
