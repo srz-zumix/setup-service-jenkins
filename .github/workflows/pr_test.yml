@@ -55,8 +55,8 @@ jobs:
           - 8080:8080
           - 50000:50000
       agent1:
-        # image: jenkins/jnlp-agent-jdk11
-        image: jenkins/jenkins:latest
+        image: jenkins/jnlp-agent-jdk11
+        # image: jenkins/jenkins:latest
     env:
       TEST_JOB: Test_GitHubToken
     steps:
@@ -100,9 +100,6 @@ jobs:
       if: success() || failure()
     - name: tcpdump log
       run: |
-        docker exec -u root ${{ job.services.jenkins.id }} pwd
-        docker exec -u root ${{ job.services.agent1.id }} pwd
-        
         docker exec -u root ${{ job.services.jenkins.id }} cat tcpdump.log
         docker exec -u root ${{ job.services.agent1.id }} cat tcpdump.log
 
