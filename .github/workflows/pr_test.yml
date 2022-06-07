@@ -64,6 +64,14 @@ jobs:
     - name: Replace jcasc path
       run: |
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
+    - run: |
+        docker exec -u root ${{ job.services.jenkins.id }} apt-get update
+        docker exec -u root ${{ job.services.jenkins.id }} apt-get install -y tcpdump
+        docker exec -u root -d ${{ job.services.jenkins.id }} tcpdump -i any -U -w tcpdump.log tcp port 8080
+
+        docker exec -u root ${{ job.services.agent1.id }} apt-get update
+        docker exec -u root ${{ job.services.agent1.id }} apt-get install -y tcpdump
+        docker exec -u root -d ${{ job.services.agent1.id }} tcpdump -i any -U -w tcpdump.log tcp port 8080
     - uses: ./
       with:
         name: jenkins
@@ -88,6 +96,12 @@ jobs:
     - name: Build log
       run: |
         jenkins-build-log "${TEST_JOB}"
+      if: success() || failure()
+    - name: tcpdump log
+      run: |
+        docker exec -u root ${{ job.services.jenkins.id }} cat tcpdump.log
+        docker exec -u root ${{ job.services.agent1.id }} cat tcpdump.log
+        # cat tcpdump.log
       if: success() || failure()
 
   setup-jenkins-default:
