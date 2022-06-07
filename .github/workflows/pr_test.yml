@@ -55,7 +55,8 @@ jobs:
           - 8081:8080
           - 50000:50000
       agent1:
-        image: jenkins/jnlp-agent-jdk11
+        # image: jenkins/jnlp-agent-jdk11
+        image: jenkins/jenkins:latest
     env:
       TEST_JOB: Test_GitHubToken
     steps:
