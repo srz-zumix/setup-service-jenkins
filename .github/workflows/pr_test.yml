@@ -101,18 +101,17 @@ jobs:
     - name: tcpdump log
       run: |
         docker exec -u root ${{ job.services.jenkins.id }} cat tcpdump.log
-        docker exec -u root ${{ job.services.agent1.id }} cat tcpdump.log
+        # docker exec -u root ${{ job.services.agent1.id }} cat tcpdump.log
 
         docker cp ${{ job.services.jenkins.id }}:tcpdump.log jenkins-tcpdump.log
-        docker cp ${{ job.services.agent1.id }}:tcpdump.log agent1-tcpdump.log
+        # docker cp ${{ job.services.agent1.id }}:tcpdump.log agent1-tcpdump.log
         # cat tcpdump.log
       if: success() || failure()
     - uses: actions/upload-artifact@v3
       with:
         name: test-result
         path: |
-          jenkins-tcpdump.log
-          agent1-tcpdump.log
+          *-tcpdump.log
       if: success() || failure()
 
   setup-jenkins-default:
