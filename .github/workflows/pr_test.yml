@@ -54,9 +54,18 @@ jobs:
         ports:
           - 8080:8080
           - 50000:50000
-      agent1:
-        image: jenkins/jnlp-agent-jdk11
-        # image: jenkins/jenkins:latest
+      # agent1:
+      #   image: jenkins/jnlp-agent-jdk11
+      #   # image: jenkins/jenkins:latest
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       TEST_JOB: Test_GitHubToken
     steps:
