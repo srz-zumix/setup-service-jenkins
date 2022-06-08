@@ -14,7 +14,7 @@ echo "${PREFIX}" >> "${GITHUB_PATH}"
 
 CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
 docker network ls
-docker network inspect "${CONTAINER_NETWORK}"
+docker network inspect "${CONTAINER_NETWORK}" || :
 docker network inspect bridge
 docker network inspect host
 
@@ -100,5 +100,4 @@ echo '::endgroup::'
 echo '::group::container restart'
 docker container restart "${JENKINS_SERVICE_ID}"
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
-docker network inspect "${CONTAINER_NETWORK}"
 echo '::endgroup::'
