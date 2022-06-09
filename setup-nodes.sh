@@ -57,6 +57,8 @@ function agent() {
       > "${PREFIX}/launch-agent.sh"
   chmod +x "${PREFIX}/launch-agent.sh"
   docker cp "${PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
+  docker inspect --format='{{.State.Status}}' "${JENKINS_AGENT_ID}"
+
   docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
 }
 
