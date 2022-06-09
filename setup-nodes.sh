@@ -7,7 +7,11 @@ if [ -z "${TEMP}" ]; then
   TEMP="$(mktemp -d)"
 fi
 
-JENKINS_NODES="{{ kitchen_agent_name }}"
+NODE_HOME=/jenkins
+REMOTE_FS="${NODE_HOME}/agent"
+PREFIX="${TEMP}/jenkins"
+
+mkdir -p "${PREFIX}/agent"
 
 # list exists nodes
 EXISTS_NODES=$(jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.each { println it.displayName }')
@@ -15,11 +19,12 @@ EXISTS_NODES=$(jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.each { 
 function create_node() {
   NODE_NAME=$1
   EXECUTORS=1
+  LABELS=
   cat <<EOF | jenkins-cli create-node "${NODE_NAME}"
 <slave>
   <name>${NODE_NAME}</name>
   <description></description>
-  <remoteFS>${NODE_HOME}</remoteFS>
+  <remoteFS>${REMOTE_FS}</remoteFS>
   <numExecutors>${EXECUTORS}</numExecutors>
   <mode>NORMAL</mode>
   <retentionStrategy class="hudson.slaves.RetentionStrategy\$Always" />
@@ -33,18 +38,26 @@ function create_node() {
   </nodeProperties>
 </slave>
 EOF
+}
 
 function agent() {
   echo "$1"
 
-  AGENT_NAME=$(docker exec "$1" uname)
+  AGENT_NAME="$1"
 
   if [[ ! "${EXISTS_NODES}" =~ ${AGENT_NAME} ]]; then
-    # ノードがなかったら作る
     create_node "${AGENT_NAME}"
   fi
 
   JENKINS_AGENT_SECRET=$(curl -sSL -u "${JENKINS_USER}:${JENKINS_TOKEN}" "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc main-class=\"hudson.remoting.jnlp.Main\"><argument>\([a-z0-9]*\).*/\1/")
+  JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${AGENT_NAME}.id")
+  sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
+      -e "s#@jenkins_agent_secret@#${JENKINS_AGENT_SECRET}#g" \
+      "${GITHUB_ACTION_PATH}/resources/launch-agent.sh.in" \
+      > "${PREFIX}/launch-agent.sh"
+  chmod +x "${PREFIX}/launch-agent.sh"
+  docker cp "${PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
+  docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
 }
 
 for node_id in ${JENKINS_NODES}; do

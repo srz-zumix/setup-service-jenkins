@@ -12,11 +12,8 @@ PREFIX="${TEMP}/jenkins/bin"
 mkdir -p "${PREFIX}"
 echo "${PREFIX}" >> "${GITHUB_PATH}"
 
-CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
-docker network ls
-docker network inspect "${CONTAINER_NETWORK}" || :
-docker network inspect bridge
-docker network inspect host
+# CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
+# docker network inspect "${CONTAINER_NETWORK}" || :
 
 JENKINS_SERVICE_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.id")
 JENKINS_SERVICE_PORT=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.ports[\"8080\"]")
