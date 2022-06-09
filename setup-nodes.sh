@@ -57,9 +57,15 @@ function agent() {
       > "${PREFIX}/launch-agent.sh"
   chmod +x "${PREFIX}/launch-agent.sh"
   docker cp "${PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
-  docker inspect --format='{{.State.Status}}' "${JENKINS_AGENT_ID}"
+  JENKINS_AGENT_STATUS=$(docker inspect --format='{{.State.Status}}' "${JENKINS_AGENT_ID}")
+  if [ "${JENKINS_AGENT_STATUS}" == "running" ]; then
+    docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
+  else
+    docker run -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
+  fi
 
-  docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
+  sleep 30
+  docker logs "${JENKINS_AGENT_ID}"
 }
 
 for node_id in ${JENKINS_NODES}; do
