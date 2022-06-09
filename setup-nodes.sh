@@ -49,7 +49,7 @@ function agent() {
     create_node "${AGENT_NAME}"
   fi
 
-  JENKINS_AGENT_SECRET=$(curl -sSL -u "${JENKINS_USER}:${JENKINS_TOKEN}" "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc main-class=\"hudson.remoting.jnlp.Main\"><argument>\([a-z0-9]*\).*/\1/")
+  JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc main-class=\"hudson.remoting.jnlp.Main\"><argument>\([a-z0-9]*\).*/\1/")
   JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${AGENT_NAME}.id")
   sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
       -e "s#@jenkins_agent_secret@#${JENKINS_AGENT_SECRET}#g" \
