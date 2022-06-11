@@ -61,6 +61,7 @@ function agent() {
   if [ "${JENKINS_AGENT_STATUS}" == "running" ]; then
     docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
   else
+    docker inspect "${JENKINS_AGENT_ID}"
     docker run -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
   fi
 
