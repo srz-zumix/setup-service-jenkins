@@ -49,14 +49,17 @@ function agent() {
     create_node "${AGENT_NAME}"
   fi
 
+  NODE_PREFIX="${PREFIX}/${AGENT_NAME}"
+  mkdir -p "${NODE_PREFIX}"
+
   JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc main-class=\"hudson.remoting.jnlp.Main\"><argument>\([a-z0-9]*\).*/\1/")
   JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${AGENT_NAME}.id")
   sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
       -e "s#@jenkins_agent_secret@#${JENKINS_AGENT_SECRET}#g" \
       "${GITHUB_ACTION_PATH}/resources/launch-agent.sh.in" \
-      > "${PREFIX}/launch-agent.sh"
-  chmod +x "${PREFIX}/launch-agent.sh"
-  docker cp "${PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
+      > "${NODE_PREFIX}/launch-agent.sh"
+  chmod +x "${NODE_PREFIX}/launch-agent.sh"
+  docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
   JENKINS_AGENT_STATUS=$(docker inspect --format='{{.State.Status}}' "${JENKINS_AGENT_ID}")
   if [ "${JENKINS_AGENT_STATUS}" == "running" ]; then
     docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
@@ -64,13 +67,15 @@ function agent() {
     docker inspect "${JENKINS_AGENT_ID}"
     set -x
     CONTAINER_NAME=$(docker inspect --format='{{.Name}}' "${JENKINS_AGENT_ID}")
-    CONTAINER_LABELS=($(docker inspect --format='{{range $k,$v := .Config.Labels}}--label {{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}"))
-    CONATINER_ENVS=($(docker inspect --format='{{range .Config.Env}}-e {{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | sed -E "s/=(.*)/=\"\1\"/g" ))
+    CONATINER_LABEL_FILE="${NODE_PREFIX}/label.txt"
+    docker inspect --format='{{range $k,$v := .Config.Labels}}--label {{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}" > "${CONATINER_LABEL_FILE}"
+    CONATINER_ENV_FILE="${NODE_PREFIX}/env.txt"
+    docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" > "${CONTAINER_ENV_FILE}"
     CONTAINER_IMAGE=$(docker inspect --format='{{.Config.Image}}' "${JENKINS_AGENT_ID}")
 
     CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
 
-    docker create --name "${CONTAINER_NAME}" "${CONTAINER_LABELS[@]}" --network "${CONTAINER_NETWORK}" --network-alias "${AGENT_NAME}" "${CONATINER_ENVS[@]}" "${CONTAINER_IMAGE}"
+    docker create --name "${CONTAINER_NAME}" --label-file "${CONATINER_LABEL_FILE}" --network "${CONTAINER_NETWORK}" --network-alias "${AGENT_NAME}" --env-file "${CONTAINER_ENV_FILE}" "${CONTAINER_IMAGE}"
 
     docker run -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
   fi
