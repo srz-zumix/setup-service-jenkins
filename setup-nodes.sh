@@ -64,8 +64,8 @@ function agent() {
     docker inspect "${JENKINS_AGENT_ID}"
     set -x
     CONTAINER_NAME=$(docker inspect --format='{{.Name}}' "${JENKINS_AGENT_ID}")
-    CONTAINER_LABELS=$(docker inspect --format='{{range $k,$v := .Config.Labels}}--label {{$k}}={{$v}} {{end}}' "${JENKINS_AGENT_ID}")
-    CONATINER_ENVS=$(docker inspect --format='{{range .Config.Env}}-e {{.}} {{end}}' "${JENKINS_SERVICE_ID}")
+    CONTAINER_LABELS=$(docker inspect --format='{{range $k,$v := .Config.Labels}}--label {{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}")
+    CONATINER_ENVS=$(docker inspect --format='{{range .Config.Env}}-e "{{.}}" {{end}}' "${JENKINS_SERVICE_ID}")
     CONTAINER_IMAGE=$(docker inspect --format='{{.Config.Image}}' "${JENKINS_AGENT_ID}")
 
     CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
