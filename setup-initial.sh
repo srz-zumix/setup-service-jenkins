@@ -27,6 +27,7 @@ fi
 
 echo "JENKINS_URL=${JENKINS_URL}" >> "${GITHUB_ENV}"
 echo "JENKINS_SERVICE_ID=${JENKINS_SERVICE_ID}" >> "${GITHUB_ENV}"
+echo "JENKINS_SERVICE_NAME=${JENKINS_SERVICE_NAME}" >> "${GITHUB_ENV}"
 echo "JENKINS_SERVICE_PORT=${JENKINS_SERVICE_PORT}" >> "${GITHUB_ENV}"
 
 echo '::group::detect jenkins service config'
