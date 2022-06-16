@@ -68,7 +68,7 @@ function agent() {
     set -x
     CONTAINER_NAME=$(docker inspect --format='{{.Name}}' "${JENKINS_AGENT_ID}")
     CONATINER_LABEL_FILE="${NODE_PREFIX}/label.txt"
-    docker inspect --format='{{range $k,$v := .Config.Labels}}--label {{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}" > "${CONATINER_LABEL_FILE}"
+    docker inspect --format='{{range $k,$v := .Config.Labels}}{{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}" > "${CONATINER_LABEL_FILE}"
     CONTAINER_ENV_FILE="${NODE_PREFIX}/env.txt"
     docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" > "${CONTAINER_ENV_FILE}"
     CONTAINER_IMAGE=$(docker inspect --format='{{.Config.Image}}' "${JENKINS_AGENT_ID}")
