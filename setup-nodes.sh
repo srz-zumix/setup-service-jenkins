@@ -59,9 +59,9 @@ function agent() {
       "${GITHUB_ACTION_PATH}/resources/launch-agent.sh.in" \
       > "${NODE_PREFIX}/launch-agent.sh"
   chmod +x "${NODE_PREFIX}/launch-agent.sh"
-  docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
   JENKINS_AGENT_STATUS=$(docker inspect --format='{{.State.Status}}' "${JENKINS_AGENT_ID}")
   if [ "${JENKINS_AGENT_STATUS}" == "running" ]; then
+    docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
     docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
   else
     docker inspect "${JENKINS_AGENT_ID}"
@@ -84,6 +84,7 @@ function agent() {
       --entrypoint "${NODE_HOME}/launch-agent.sh" \
       "${CONTAINER_IMAGE}")
 
+    docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
     docker start "${JENKINS_AGENT_ID}"
   fi
 
