@@ -75,9 +75,16 @@ function agent() {
 
     CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
 
-    docker create --name "${CONTAINER_NAME}" --label-file "${CONATINER_LABEL_FILE}" --network "${CONTAINER_NETWORK}" --network-alias "${AGENT_NAME}" --env-file "${CONTAINER_ENV_FILE}" "${CONTAINER_IMAGE}"
+    docker container rm "${CONTAINER_NAME}"
+    JENKINS_AGENT_ID=$(docker create --name "${CONTAINER_NAME}" \
+      --label-file "${CONATINER_LABEL_FILE}" \
+      --network "${CONTAINER_NETWORK}" \
+      --network-alias "${AGENT_NAME}" \
+      --env-file "${CONTAINER_ENV_FILE}" \
+      --entrypoint "${NODE_HOME}/launch-agent.sh" \
+      "${CONTAINER_IMAGE}")
 
-    docker run -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
+    docker start "${JENKINS_AGENT_ID}"
   fi
 
   sleep 30

@@ -14,7 +14,7 @@ usage() {
 }
 
 IMAGE_TAG=latest
-PORT=8080
+PORT=39080
 JCASC_PATH=testdata/jcasc
 CLEAN=false
 
