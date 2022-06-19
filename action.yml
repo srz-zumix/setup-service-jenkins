@@ -94,7 +94,7 @@ runs:
       run: |
         "${GITHUB_ACTION_PATH}/setup-nodes.sh"
     - name: Launch cleanup action
-      uses: "${GITHUB_ACTION_PATH}/resources/post-action"
+      uses: "${{ github.action_path }}/resources/post-action"
       if: "inputs.nodes != ''"
 
 branding:
