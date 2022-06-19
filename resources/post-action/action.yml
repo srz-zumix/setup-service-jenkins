@@ -1,0 +1,12 @@
+name: 'setup-service-jenkins-post-action'
+description: 'setup-service-jenkins post action workaround.'
+author: 'srz_zumix'
+
+runs:
+  using: 'node16'
+  main: 'index.js'
+  post: 'cleanup.js'
+
+branding:
+  icon: 'settings'
+  color: 'yellow'

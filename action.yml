@@ -93,6 +93,9 @@ runs:
       if: "inputs.nodes != ''"
       run: |
         "${GITHUB_ACTION_PATH}/setup-nodes.sh"
+    - name: Launch cleanup action
+      uses: "${GITHUB_ACTION_PATH}/resources/post-action"
+      if: "inputs.nodes != ''"
 
 branding:
   icon: 'settings'
