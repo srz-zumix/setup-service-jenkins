@@ -29,8 +29,6 @@ inputs:
     description: 'GITHUB_TOKEN add to jenkins credential. (id = github_token)'
     default: ''
     required: false
-  action_path:
-    default: ${{ github.action_path }}
 
 runs:
   using: "composite"
@@ -96,7 +94,7 @@ runs:
       run: |
         "${GITHUB_ACTION_PATH}/setup-nodes.sh"
     - name: Launch cleanup action
-      uses: "${{ inputs.action_path }}/resources/post-action"
+      uses: "./resources/post-action"
       if: "inputs.nodes != ''"
 
 branding:
