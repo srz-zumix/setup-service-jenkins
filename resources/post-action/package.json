@@ -1,4 +1,25 @@
 {
+  "name": "setup-service-jenkins-post-action",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/srz-zumix/setup-service-jenkins.git"
+  },
+  "keywords": [
+    "jenkins"
+  ],
+  "author": "srz_zumix <zumix.cpp@gmail.com> (https://github.com/srz-zumix)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/srz-zumix/setup-service-jenkins/issues"
+  },
+  "homepage": "https://github.com/srz-zumix/setup-service-jenkins#readme",
+  "description": "",
   "dependencies": {
     "@actions/core": "^1.9.0",
     "@actions/exec": "^1.1.1",
