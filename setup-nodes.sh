@@ -40,6 +40,7 @@ function create_node() {
 EOF
 }
 
+JENKINS_AGENT_IDS=()
 function agent() {
   echo "$1"
 
@@ -86,6 +87,8 @@ function agent() {
 
     docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
     docker start "${JENKINS_AGENT_ID}"
+
+    JENKINS_AGENT_IDS+=("${JENKINS_AGENT_IDS}")
   fi
 
   sleep 30
@@ -97,3 +100,5 @@ for node_id in ${JENKINS_NODES}; do
   agent "${node_id}"
   echo '::endgroup::'
 done
+
+echo "JENKINS_AGENT_IDS=${JENKINS_AGENT_IDS}" >> "${GITHUB_ENV}"

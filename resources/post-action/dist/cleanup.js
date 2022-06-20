@@ -1316,6 +1316,14 @@ module.exports = require("path");
 
 /***/ }),
 
+/***/ 282:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("process");
+
+/***/ }),
+
 /***/ 576:
 /***/ ((module) => {
 
@@ -1382,6 +1390,9 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const exec = __nccwpck_require__(552);
+const process = __nccwpck_require__(282);
+
+console.log(process.env['JENKINS_AGENT_IDS']);
 
 exec.exec('docker', ['ps', '-a']);
 
