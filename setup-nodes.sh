@@ -53,7 +53,7 @@ function agent() {
   NODE_PREFIX="${PREFIX}/${AGENT_NAME}"
   mkdir -p "${NODE_PREFIX}"
 
-  JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc main-class=\"hudson.remoting.jnlp.Main\"><argument>\([a-z0-9]*\).*/\1/")
+  JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc[^>]*><argument>\([a-z0-9]*\).*/\1/")
   JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${AGENT_NAME}.id")
   sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
       -e "s#@jenkins_agent_secret@#${JENKINS_AGENT_SECRET}#g" \
@@ -66,7 +66,6 @@ function agent() {
     docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
   else
     docker inspect "${JENKINS_AGENT_ID}"
-    set -x
     CONTAINER_NAME=$(docker inspect --format='{{.Name}}' "${JENKINS_AGENT_ID}")
     CONATINER_LABEL_FILE="${NODE_PREFIX}/label.txt"
     docker inspect --format='{{range $k,$v := .Config.Labels}}{{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}" > "${CONATINER_LABEL_FILE}"
