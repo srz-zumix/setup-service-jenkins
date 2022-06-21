@@ -1,4 +1,4 @@
-buid: dist/index.js dist/cleanup.js
+build: dist/index.js dist/cleanup.js
 
 dist/index.js: src/index.js Makefile
 	ncc build src/index.js

@@ -1392,9 +1392,15 @@ var __webpack_exports__ = {};
 const exec = __nccwpck_require__(552);
 const process = __nccwpck_require__(282);
 
-console.log(process.env['JENKINS_AGENT_IDS']);
+docker_ids = process.env['JENKINS_AGENT_IDS'].split(' ');
 
-exec.exec('docker', ['ps', '-a']);
+for (const docker_id of docker_ids) {
+    console.log("Print service container logs: " + docker_id)
+    exec.exec('docker', ['logs', '--details', docker_id]);
+    console.log("Stop and remove container: " + docker_id)
+    exec.exec('docker', ['rm', '--force', docker_id]);
+}
+
 
 })();
 
