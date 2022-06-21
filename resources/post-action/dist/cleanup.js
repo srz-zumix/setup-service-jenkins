@@ -1392,7 +1392,7 @@ var __webpack_exports__ = {};
 const exec = __nccwpck_require__(552);
 const process = __nccwpck_require__(282);
 
-docker_ids = process.env['JENKINS_AGENT_IDS'].split(' ');
+docker_ids = process.env['JENKINS_AGENT_IDS'].trim().split(' ');
 
 for (const docker_id of docker_ids) {
     console.log("Print service container logs: " + docker_id)

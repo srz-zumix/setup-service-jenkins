@@ -1,7 +1,7 @@
 const exec = require('@actions/exec');
 const process = require('process');
 
-docker_ids = process.env['JENKINS_AGENT_IDS'].split(' ');
+docker_ids = process.env['JENKINS_AGENT_IDS'].trim().split(' ');
 
 for (const docker_id of docker_ids) {
     console.log("Print service container logs: " + docker_id)
