@@ -101,4 +101,4 @@ for node_id in ${JENKINS_NODES}; do
   echo '::endgroup::'
 done
 
-echo "JENKINS_AGENT_IDS=${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
+echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
