@@ -81,8 +81,10 @@ function agent() {
       --network "${CONTAINER_NETWORK}" \
       --network-alias "${AGENT_NAME}" \
       --env-file "${CONTAINER_ENV_FILE}" \
-      --entrypoint "${NODE_HOME}/launch-agent.sh" \
-      "${CONTAINER_IMAGE}")
+      --entrypoint bash \
+      "${CONTAINER_IMAGE}" \
+      "${NODE_HOME}/launch-agent.sh" \
+      )
 
     docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
     docker start "${JENKINS_AGENT_ID}"
