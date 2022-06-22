@@ -65,7 +65,6 @@ function agent() {
     docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
     docker exec -d "${JENKINS_AGENT_ID}" "${NODE_HOME}/launch-agent.sh"
   else
-    docker inspect "${JENKINS_AGENT_ID}"
     CONTAINER_NAME=$(docker inspect --format='{{.Name}}' "${JENKINS_AGENT_ID}")
     CONATINER_LABEL_FILE="${NODE_PREFIX}/label.txt"
     docker inspect --format='{{range $k,$v := .Config.Labels}}{{$k}}="{{$v}}" {{end}}' "${JENKINS_AGENT_ID}" > "${CONATINER_LABEL_FILE}"
