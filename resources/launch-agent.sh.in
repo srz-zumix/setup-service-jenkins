@@ -7,5 +7,7 @@ mkdir -p "${AGENT_WORKSPACE}"
 JENKINS_URL=@jenkins_url@
 curl -s --url "${JENKINS_URL}/jnlpJars/agent.jar" --insecure --output /tmp/agent.jar
 
+env
+
 JENKINS_AGENT_SECRET=@jenkins_agent_secret@
 "${JAVA:-java}" -jar /tmp/agent.jar -jnlpUrl "${JENKINS_URL}/computer/${JENKINS_AGENT_NAME}/slave-agent.jnlp" -secret "${JENKINS_AGENT_SECRET}" -noCertificateCheck -workDir "${AGENT_WORKSPACE}"
