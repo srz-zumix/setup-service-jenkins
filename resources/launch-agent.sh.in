@@ -9,4 +9,4 @@ JENKINS_URL=@jenkins_url@
 curl -s --url "${JENKINS_URL}/jnlpJars/agent.jar" --insecure --output "${TEMP_DIR}/agent.jar"
 
 JENKINS_AGENT_SECRET=@jenkins_agent_secret@
-"${JAVA:-java}" -jar /tmp/agent.jar -jnlpUrl "${JENKINS_URL}/computer/${JENKINS_AGENT_NAME}/slave-agent.jnlp" -secret "${JENKINS_AGENT_SECRET}" -noCertificateCheck -workDir "${AGENT_WORKSPACE}"
+"${JAVA:-java}" -jar "${TEMP_DIR}/agent.jar" -jnlpUrl "${JENKINS_URL}/computer/${JENKINS_AGENT_NAME}/slave-agent.jnlp" -secret "${JENKINS_AGENT_SECRET}" -noCertificateCheck -workDir "${AGENT_WORKSPACE}"
