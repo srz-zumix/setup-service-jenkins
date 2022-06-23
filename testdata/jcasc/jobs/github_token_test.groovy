@@ -4,7 +4,9 @@ pipelineJob('Test_GitHubToken') {
         sandbox(true)
         script('''
 pipeline {
-  agent any
+  agent {
+    label 'agent1'
+  }
 
   stages {
     stage("Checkout") {
