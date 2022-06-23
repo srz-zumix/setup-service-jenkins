@@ -44,22 +44,24 @@ JENKINS_AGENT_IDS=()
 function agent() {
   echo "$1"
 
-  AGENT_NAME="$1"
+  JENKINS_AGENT_NAME="$1"
 
-  if [[ ! "${EXISTS_NODES}" =~ ${AGENT_NAME} ]]; then
-    create_node "${AGENT_NAME}"
+  if [[ ! "${EXISTS_NODES}" =~ ${JENKINS_AGENT_NAME} ]]; then
+    create_node "${JENKINS_AGENT_NAME}"
   fi
 
-  NODE_PREFIX="${PREFIX}/${AGENT_NAME}"
+  NODE_PREFIX="${PREFIX}/${JENKINS_AGENT_NAME}"
   mkdir -p "${NODE_PREFIX}"
 
-  JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc[^>]*><argument>\([a-z0-9]*\).*/\1/")
-  JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${AGENT_NAME}.id")
+  JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${JENKINS_AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc[^>]*><argument>\([a-z0-9]*\).*/\1/")
+  JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_AGENT_NAME}.id")
   sed -e "s#@jenkins_url@#${JENKINS_URL_IN_CONTAINER}#g" \
+      -e "s#@jenkins_JENKINS_AGENT_NAME@#${JENKINS_AGENT_NAME}#g" \
       -e "s#@jenkins_agent_secret@#${JENKINS_AGENT_SECRET}#g" \
       "${GITHUB_ACTION_PATH}/resources/launch-agent.sh.in" \
       > "${NODE_PREFIX}/launch-agent.sh"
   chmod +x "${NODE_PREFIX}/launch-agent.sh"
+
   JENKINS_AGENT_STATUS=$(docker inspect --format='{{.State.Status}}' "${JENKINS_AGENT_ID}")
   if [ "${JENKINS_AGENT_STATUS}" == "running" ]; then
     docker cp "${NODE_PREFIX}" "${JENKINS_AGENT_ID}:${NODE_HOME}"
@@ -78,7 +80,7 @@ function agent() {
     JENKINS_AGENT_ID=$(docker create --name "${CONTAINER_NAME}" \
       --label-file "${CONATINER_LABEL_FILE}" \
       --network "${CONTAINER_NETWORK}" \
-      --network-alias "${AGENT_NAME}" \
+      --network-alias "${JENKINS_AGENT_NAME}" \
       --env-file "${CONTAINER_ENV_FILE}" \
       --entrypoint bash \
       "${CONTAINER_IMAGE}" \
