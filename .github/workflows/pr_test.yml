@@ -84,7 +84,7 @@ jobs:
         jenkins-cli list-jobs
     - name: List nodes
       run: |
-        jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.each { println it.displayName }'
+        jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'
     - name: Build job
       run: |
         jenkins-cli build "${TEST_JOB}" -s
