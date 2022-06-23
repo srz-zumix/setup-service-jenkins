@@ -1,12 +1,14 @@
 #!/bin/bash
 
+set -x
+
 TEMP_DIR="${TMP:-/tmp}"
 AGENT_WORKSPACE="${TEMP_DIR}/jenkins-agent"
 
 mkdir -p "${AGENT_WORKSPACE}"
 
 JENKINS_URL=@jenkins_url@
-curl -s --url "${JENKINS_URL}/jnlpJars/agent.jar" --insecure --output "${TEMP_DIR}/agent.jar"
+curl -s --url "${JENKINS_URL}/jnlpJars/agent.jar" --output "${TEMP_DIR}/agent.jar"
 ls -l "${TEMP_DIR}"
 
 JENKINS_AGENT_SECRET=@jenkins_agent_secret@
