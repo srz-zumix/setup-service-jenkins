@@ -15,6 +15,10 @@ async function stop_container(docker_id) {
     }
 }
 
-for (const docker_id of docker_ids) {
-    await stop_container(docker_id);
+async function stop_containers() {
+    for (const docker_id of docker_ids) {
+        await stop_container(docker_id);
+    }    
 }
+
+stop_containers()
