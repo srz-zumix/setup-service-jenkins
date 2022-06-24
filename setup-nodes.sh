@@ -95,8 +95,6 @@ function agent() {
     docker start "${JENKINS_AGENT_ID}"
 
     JENKINS_AGENT_IDS+=("${JENKINS_AGENT_ID}")
-
-    echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
   fi
 }
 
@@ -105,3 +103,5 @@ for node_id in ${JENKINS_NODES}; do
   agent "${node_id}"
   echo '::endgroup::'
 done
+
+echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
