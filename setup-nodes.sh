@@ -57,7 +57,7 @@ function agent() {
   JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_AGENT_NAME}.id")
   if [ "${JENKINS_AGENT_ID}" == "null" ]; then
     echo "::error ::${JENKINS_AGENT_NAME} service not found."
-    exit 1
+    return
   fi
   sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
       -e "s#@jenkins_agent_name@#${JENKINS_AGENT_NAME}#g" \
