@@ -82,7 +82,7 @@ jobs:
     - name: List jobs
       run: |
         jenkins-cli list-jobs
-    - name: List nodes
+    - name: List online nodes
       run: |
         jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'
     - name: Build job

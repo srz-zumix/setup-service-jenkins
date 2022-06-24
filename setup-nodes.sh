@@ -105,3 +105,24 @@ for node_id in ${JENKINS_NODES}; do
 done
 
 echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
+
+function containsElement () {
+  for e in "${@:2}"; do
+    [[ "$e" = "$1" ]] && return 0
+  done
+  return 1
+}
+
+function wait_agent_online() {
+  ONLINE_ONDES=($(jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'))
+  for node_id in ${JENKINS_NODES}; do
+    containsElement "${node_id}" "${ONLINE_ONDES[@]}" || return 1
+  done
+  return 0
+}
+
+set -x
+while wait_agent_online; do
+  echo "wait launch agent"
+  sleep 3
+done
