@@ -107,11 +107,16 @@ done
 echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
 
 function test_agent_online() {
-  WAIT_NODE=(jenkins-cli-groovy "def onlineNodes = jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }; '${JENKINS_NODES}'.eachLine { if( !onlineNodes.contains(it) ) { println it } };")
+  WAIT_NODE=$(
+    cat <<EOF | jenkins-cli groovy =
+def onlineNodes = jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }
+"${JENKINS_NODES}".eachLine { if( !onlineNodes.contains(it) ) { println it } }
+EOF
+  )
   if [ -z "${WAIT_NODE}" ]; then
-    return 0
+    return 1
   fi
-  return 1
+  return 0
 }
 
 function wait_agent_online() {
