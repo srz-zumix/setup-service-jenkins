@@ -135,4 +135,5 @@ function wait_agent_online() {
   done
 }
 
+set -x
 wait_agent_online
