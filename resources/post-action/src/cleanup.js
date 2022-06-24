@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const exec = require('@actions/exec');
 const process = require('process');
 
-docker_ids = process.env['JENKINS_AGENT_IDS'].trim().split(' ');
+docker_ids = (process.env['JENKINS_AGENT_IDS'] || '').trim().split(' ');
 
 async function stop_container(docker_id) {
     try {

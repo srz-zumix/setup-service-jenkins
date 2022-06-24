@@ -3443,7 +3443,7 @@ const core = __nccwpck_require__(46);
 const exec = __nccwpck_require__(552);
 const process = __nccwpck_require__(282);
 
-docker_ids = process.env['JENKINS_AGENT_IDS'].trim().split(' ');
+docker_ids = (process.env['JENKINS_AGENT_IDS'] || '').trim().split(' ');
 
 async function stop_container(docker_id) {
     try {
