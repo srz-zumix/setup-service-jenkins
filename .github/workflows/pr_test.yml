@@ -57,7 +57,7 @@ jobs:
       agent1:
         image: jenkins/jnlp-agent-jdk11
       agent2:
-        image: jenkins/jnlp-agent-jdk11
+        image: postgres
     env:
       TEST_JOB: Test_GitHubToken
     steps:
