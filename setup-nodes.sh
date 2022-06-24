@@ -113,16 +113,26 @@ function containsElement () {
   return 1
 }
 
-function wait_agent_online() {
+function test_agent_online() {
   ONLINE_ONDES=($(jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'))
   for node_id in ${JENKINS_NODES}; do
-    containsElement "${node_id}" "${ONLINE_ONDES[@]}" || return 1
+    containsElement "${node_id}" "${ONLINE_ONDES[@]}" || return 0
   done
-  return 0
+  return 1
 }
 
-set -x
-while wait_agent_online; do
-  echo "wait launch agent"
-  sleep 3
-done
+function wait_agent_online() {
+  local attempt_max=5
+  local -i attempt_num=1
+  while test_agent_online; do    
+    if ((attempt_num == attempt_max)); then
+        break
+    fi
+    ((attempt_num++))
+
+    echo "wait launch agent"
+    sleep 3
+  done
+}
+
+wait_agent_online
