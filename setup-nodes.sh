@@ -55,6 +55,10 @@ function agent() {
 
   JENKINS_AGENT_SECRET=$(curl -sSL "${JENKINS_URL}/computer/${JENKINS_AGENT_NAME}/slave-agent.jnlp" | sed "s/.*<application-desc[^>]*><argument>\([a-z0-9]*\).*/\1/")
   JENKINS_AGENT_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_AGENT_NAME}.id")
+  if [ "${JENKINS_AGENT_ID}" == "null" ]; then
+    echo "::error ${JENKINS_AGENT_NAME} service not found."
+    exit 1
+  fi
   sed -e "s#@jenkins_url@#${JENKINS_URL}#g" \
       -e "s#@jenkins_agent_name@#${JENKINS_AGENT_NAME}#g" \
       -e "s#@jenkins_agent_secret@#${JENKINS_AGENT_SECRET}#g" \
