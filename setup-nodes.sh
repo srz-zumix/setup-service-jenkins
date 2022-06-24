@@ -114,6 +114,13 @@ def onlineNodes = jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }
 """.eachLine { if( !onlineNodes.contains(it) ) { println it } }
 EOF
   )
+  WAIT_NODE2=$(
+    cat <<EOF | jenkins-cli groovy =
+def onlineNodes = jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }
+"""${JENKINS_NODES}
+""".eachLine { if( !onlineNodes.contains(it) ) { println it; println "aa"; } }
+EOF
+  )
   if [ -z "${WAIT_NODE}" ]; then
     return 1
   fi
