@@ -116,6 +116,7 @@ EOF
   if [ -z "${WAIT_NODE}" ]; then
     return 1
   fi
+  echo "wait agents: ${WAIT_NODE//\n/,}"
   return 0
 }
 
@@ -127,10 +128,10 @@ function wait_agent_online() {
         break
     fi
     ((attempt_num++))
-
-    echo "wait launch agent"
     sleep 3
   done
 }
 
+echo "::group::wait launch agents"
 wait_agent_online
+echo '::endgroup::'
