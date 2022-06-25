@@ -110,7 +110,7 @@ function test_agent_online() {
   WAIT_NODE=$(
     cat <<EOF | jenkins-cli groovy =
 def onlineNodes = jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }
-"""${JENKINS_NODES}""".eachLine { line -> if( !onlineNodes.any{ it.displayName == line } ) { print "$[line} " } }
+"""${JENKINS_NODES}""".eachLine { line -> if( !onlineNodes.any{ it.displayName == line } ) { print "\${line} " } }
 EOF
   )
   if [ -z "${WAIT_NODE}" ]; then
