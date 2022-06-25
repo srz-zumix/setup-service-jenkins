@@ -116,7 +116,7 @@ EOF
   if [ -z "${WAIT_NODE}" ]; then
     return 1
   fi
-  echo "wait agents: ${WAIT_NODE//\n/,}"
+  echo "wait agents: ${WAIT_NODE//\\n/,}"
   return 0
 }
 
