@@ -13,14 +13,14 @@ usage() {
     exit 1
 }
 
-JENKINS_SERVICE_ID=setup-jenkins
 IMAGE_TAG=latest
-PORT=8080
+PORT=39080
 JCASC_PATH=testdata/jcasc
 CLEAN=false
 
 RUNNER_TEMP=tmp
 GITHUB_PATH=${RUNNER_TEMP}/GITHUB_PATH
+GITHUB_ENV=${RUNNER_TEMP}/GITHUB_ENV
 GITHUB_ACTION_PATH=.
 
 while getopts c:p:t:xh OPT
@@ -35,15 +35,38 @@ case $OPT in
     esac
 done
 
-JENKINS_URL="http://localhost:${PORT}"
+JENKINS_SERVICE_NAME=localhost
+JENKINS_NODES=
+JENKINS_SERVICE_ID=setup-jenkins
 INSTALL_PLUGINS="job-dsl warnings-ng"
 
-export JENKINS_URL
-export JENKINS_SERVICE_ID
+JOB_SERVICES_CONTEXT_JSON=$(cat <<EOS
+{
+    "${JENKINS_SERVICE_NAME}": {
+        "id": "${JENKINS_SERVICE_ID}",
+        "ports": {
+            "50000": "50000",
+            "8080": "${PORT}"
+        },
+        "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
+    },
+    "agent1": {
+        "id": "9eb30e83a05b7332762c4c8bf74b3543dfbf911d8c37d49fabf3bd0886a23795",
+        "ports": {},
+        "network": "github_network_92719e37afba4ba1a8cc86fc4131ec94"
+    }
+}
+EOS
+)
+
+export JOB_SERVICES_CONTEXT_JSON
+export JENKINS_SERVICE_NAME
+export JENKINS_NODES
 export JCASC_PATH
 export INSTALL_PLUGINS
 export RUNNER_TEMP
 export GITHUB_PATH
+export GITHUB_ENV
 export GITHUB_ACTION_PATH
 
 stop() {
@@ -52,13 +75,14 @@ stop() {
 }
 
 setpath() {
-    GITHUB_PATH_=$(tr '\n' ':' < ${GITHUB_PATH})
+    GITHUB_PATH_=$(tr '\n' ':' < "${GITHUB_PATH}")
     PATH=${GITHUB_PATH_}:${PATH}
     export PATH
 }
 
 mkdir -p "${RUNNER_TEMP}"
 echo . > "${GITHUB_PATH}"
+echo "CI=true" > "${GITHUB_ENV}"
 
 stop
 
@@ -66,6 +90,11 @@ docker run -d -p "${PORT}:8080" -p 50000:50000 --name "${JENKINS_SERVICE_ID}" "j
 
 time ./setup-initial.sh
 setpath
+# shellcheck disable=SC2086 source=/dev/null
+. "${GITHUB_ENV}"
+export JENKINS_URL
+export JENKINS_SERVICE_ID
+
 time ./wait-launch.sh
 time ./setup-cli.sh
 setpath
@@ -74,6 +103,7 @@ time ./install-plugins.sh testdata/plugins.yml
 time ./install-plugins-fromenv.sh
 time ./restart-and-wait.sh
 time ./setup-jcasc.sh
+time ./setup-nodes.sh
 
 jenkins-credential -c StringCredentials -i github_token -- -t token
 jenkins-credential -c UsernamePasswordCredentials -i hoge_user_pass -- -u hoge -p password

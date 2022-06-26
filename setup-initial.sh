@@ -12,7 +12,31 @@ PREFIX="${TEMP}/jenkins/bin"
 mkdir -p "${PREFIX}"
 echo "${PREFIX}" >> "${GITHUB_PATH}"
 
-echo '::group::docker inspect jenkins'
+# CONTAINER_NETWORK=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.network")
+# docker network inspect "${CONTAINER_NETWORK}" || :
+
+JENKINS_SERVICE_ID=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.id")
+JENKINS_SERVICE_PORT=$(echo "${JOB_SERVICES_CONTEXT_JSON}" | jq -r ".${JENKINS_SERVICE_NAME}.ports[\"8080\"]")
+JENKINS_URL="http://${JENKINS_SERVICE_NAME}:${JENKINS_SERVICE_PORT}"
+if [ -f /.dockerenv ]; then
+  :
+else
+  JENKINS_SERVICE_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${JENKINS_SERVICE_ID}")
+  # JENKINS_URL="http://${JENKINS_SERVICE_IP}:${JENKINS_SERVICE_PORT}"
+  if [ "${JENKINS_SERVICE_NAME}" != "localhost" ]; then
+    sudo echo "${JENKINS_SERVICE_IP} ${JENKINS_SERVICE_NAME}" | sudo tee -a /etc/hosts
+  fi
+fi
+
+{
+  echo "JENKINS_URL=${JENKINS_URL}"
+  echo "JENKINS_SERVICE_ID=${JENKINS_SERVICE_ID}"
+  echo "JENKINS_SERVICE_NAME=${JENKINS_SERVICE_NAME}"
+  echo "JENKINS_SERVICE_PORT=${JENKINS_SERVICE_PORT}"
+} >> "${GITHUB_ENV}"
+
+echo '::group::detect jenkins service config'
+
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}"
 docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' "${JENKINS_SERVICE_ID}" | grep -v -e LANG -e JAVA_OPTS -e PATH -e JAVA_HOME > "${TEMP}/jenkins-env"
 # shellcheck source=/dev/null
@@ -77,6 +101,10 @@ echo '::endgroup::'
 
 # restart
 echo '::group::container restart'
+
+LOG_PATH=$(docker inspect "${JENKINS_SERVICE_ID}" --format='{{.LogPath}}')
+sudo truncate -s 0 "${LOG_PATH}" || :
+
 docker container restart "${JENKINS_SERVICE_ID}"
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
 echo '::endgroup::'

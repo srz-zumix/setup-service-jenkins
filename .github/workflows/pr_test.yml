@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@v3
     - uses: ./
       with:
-        id: ${{ job.services.jenkins.id }}
+        name: jenkins
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
         plugins_file: testdata/plugins.yml
@@ -54,6 +54,10 @@ jobs:
         ports:
           - 8080:8080
           - 50000:50000
+      agent1:
+        image: jenkins/jnlp-agent-jdk11
+      # agent2:
+      #   image: postgres
     env:
       TEST_JOB: Test_GitHubToken
     steps:
@@ -64,7 +68,10 @@ jobs:
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
     - uses: ./
       with:
-        id: ${{ job.services.jenkins.id }}
+        name: jenkins
+        nodes: |
+          agent1
+          agent2
         jcasc_path: testdata/jcasc
         install_suggested_plugins: true
         plugins: job-dsl
@@ -72,12 +79,24 @@ jobs:
     - uses: ./.github/actions/composite/post-commands
       with:
         id: ${{ job.services.jenkins.id }}
-    - run: |
+    - name: List jobs
+      run: |
         jenkins-cli list-jobs
-    - run: |
+    - name: List online nodes
+      run: |
+        jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'
+    - name: Build job
+      run: |
         jenkins-cli build "${TEST_JOB}" -s
-    - run: |
+    - name: Build log
+      run: |
         jenkins-build-log "${TEST_JOB}"
+      if: success() || failure()
+    - uses: actions/upload-artifact@v3
+      with:
+        name: test-result
+        path: |
+          *-tcpdump.log
       if: success() || failure()
 
   setup-jenkins-default:
@@ -99,7 +118,7 @@ jobs:
       uses: actions/checkout@v3
     - uses: ./
       with:
-        id: ${{ job.services.jenkins.id }}
+        name: jenkins
         plugins: |
           job-dsl
           workflow-job

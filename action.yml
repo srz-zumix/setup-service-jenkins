@@ -2,13 +2,9 @@ name: 'setup-service-jenkins'
 description: 'Setup services jenkins container and install jenkins-cli wrapper.'
 author: 'srz_zumix'
 inputs:
-  id:
-    description: "jenkins service container id"
+  name:
+    description: "jenkins service container name"
     required: true
-  port:
-    description: "jenkins service container port"
-    default: '8080'
-    required: false
   plugins:
     description: "install plugin list"
     default: ''
@@ -25,59 +21,52 @@ inputs:
     description: "Jenkins Configuration as Code YAML path. (directory or file)"
     default: ''
     required: false
+  nodes:
+    description: 'Jenkins node container names.'
+    default: ''
+    required: false
   github_token:
     description: 'GITHUB_TOKEN add to jenkins credential. (id = github_token)'
     default: ''
     required: false
+
 runs:
   using: "composite"
   steps:
     - name: Initial SetUp
       shell: bash
       env:
-        JENKINS_URL: http://localhost:${{ inputs.port }}
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
+        JENKINS_SERVICE_NAME: ${{ inputs.name }}
+        JOB_SERVICES_CONTEXT_JSON: ${{ toJSON(job.services) }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-initial.sh"
     - name: Wait Launch Jenkins
       shell: bash
-      env:
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/wait-launch.sh"
     - name: Setup CLI
       shell: bash
-      env: 
-        JENKINS_URL: http://localhost:${{ inputs.port }}
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-cli.sh"
     - name: Install Jenkins Suggested Plugins
       shell: bash
-      env:
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${GITHUB_ACTION_PATH}/resources/DefaultJenkinsPlugins.txt"
       if: "inputs.install_suggested_plugins == 'true'"
     - name: Install Jenkins Plugins
       shell: bash
       env:
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
         INSTALL_PLUGINS: ${{ inputs.plugins }}
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins-fromenv.sh"
       if: "inputs.plugins != ''"
     - name: Install Jenkins Plugins from file
       shell: bash
-      env:
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/install-plugins.sh" "${{ inputs.plugins_file }}"
       if: "inputs.plugins_file != ''"
     - name: Restart Jenkins
       shell: bash
-      env:
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
       if: >
@@ -88,9 +77,7 @@ runs:
       shell: bash
       if: "inputs.jcasc_path != ''"
       env: 
-        JENKINS_URL: http://localhost:${{ inputs.port }}
         JCASC_PATH: ${{ inputs.jcasc_path }}
-        JENKINS_SERVICE_ID: ${{ inputs.id }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-jcasc.sh"
     - name: Setup GitHub Token Credentials
@@ -98,6 +85,17 @@ runs:
       if: "inputs.github_token != ''"
       run: |
         jenkins-credential -c UsernamePasswordCredentials -i github_token -- -u x-access-token -p ${{ inputs.github_token }}
+    - name: Launch cleanup action
+      uses: "./resources/post-action"
+      if: "inputs.nodes != ''"
+    - name: Setup Jenkins nodes
+      shell: bash
+      env:
+        JOB_SERVICES_CONTEXT_JSON: ${{ toJSON(job.services) }}
+        JENKINS_NODES: ${{ inputs.nodes }}
+      if: "inputs.nodes != ''"
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-nodes.sh"
 
 branding:
   icon: 'settings'

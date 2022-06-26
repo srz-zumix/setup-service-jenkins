@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TEMP_DIR="${TMP:-/tmp}"
+AGENT_WORKSPACE="${TEMP_DIR}/jenkins-agent"
+
+mkdir -p "${AGENT_WORKSPACE}"
+
+JENKINS_URL=@jenkins_url@
+curl -sSL --url "${JENKINS_URL}/jnlpJars/agent.jar" -o "${TEMP_DIR}/agent.jar"
+
+JENKINS_AGENT_NAME=@jenkins_agent_name@
+JENKINS_AGENT_SECRET=@jenkins_agent_secret@
+"${JAVA:-java}" -jar "${TEMP_DIR}/agent.jar" -jnlpUrl "${JENKINS_URL}/computer/${JENKINS_AGENT_NAME}/slave-agent.jnlp" -secret "${JENKINS_AGENT_SECRET}" -noCertificateCheck -workDir "${AGENT_WORKSPACE}"
