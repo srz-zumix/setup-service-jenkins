@@ -23,7 +23,9 @@ if [ -f /.dockerenv ]; then
 else
   JENKINS_SERVICE_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "${JENKINS_SERVICE_ID}")
   # JENKINS_URL="http://${JENKINS_SERVICE_IP}:${JENKINS_SERVICE_PORT}"
-  sudo echo "${JENKINS_SERVICE_IP} ${JENKINS_SERVICE_NAME}" | sudo tee -a /etc/hosts
+  if [ "${JENKINS_SERVICE_NAME}" != "localhost" ]; then
+    sudo echo "${JENKINS_SERVICE_IP} ${JENKINS_SERVICE_NAME}" | sudo tee -a /etc/hosts
+  fi
 fi
 
 {
@@ -101,7 +103,10 @@ echo '::endgroup::'
 echo '::group::container restart'
 
 LOG_PATH=$(docker inspect "${JENKINS_SERVICE_ID}" --format='{{.LogPath}}')
-sudo truncate -s 0 "${LOG_PATH}"
+echo ${LOG_PATH}
+if [ -f "${LOG_PATH}" ]; then
+  sudo truncate -s 0 "${LOG_PATH}"
+fi
 
 docker container restart "${JENKINS_SERVICE_ID}"
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"

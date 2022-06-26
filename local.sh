@@ -36,6 +36,7 @@ case $OPT in
 done
 
 JENKINS_SERVICE_NAME=localhost
+JENKINS_NODES=
 JENKINS_SERVICE_ID=setup-jenkins
 INSTALL_PLUGINS="job-dsl warnings-ng"
 
@@ -60,6 +61,7 @@ EOS
 
 export JOB_SERVICES_CONTEXT_JSON
 export JENKINS_SERVICE_NAME
+export JENKINS_NODES
 export JCASC_PATH
 export INSTALL_PLUGINS
 export RUNNER_TEMP
@@ -101,6 +103,7 @@ time ./install-plugins.sh testdata/plugins.yml
 time ./install-plugins-fromenv.sh
 time ./restart-and-wait.sh
 time ./setup-jcasc.sh
+time ./setup-nodes.sh
 
 jenkins-credential -c StringCredentials -i github_token -- -t token
 jenkins-credential -c UsernamePasswordCredentials -i hoge_user_pass -- -u hoge -p password

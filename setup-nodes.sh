@@ -104,7 +104,9 @@ for node_id in ${JENKINS_NODES}; do
   echo '::endgroup::'
 done
 
-echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
+if [ "${#JENKINS_AGENT_IDS[@]}" -gt 0 ]; then
+  echo "JENKINS_AGENT_IDS=" "${JENKINS_AGENT_IDS[@]}" >> "${GITHUB_ENV}"
+fi
 
 function test_agent_online() {
   WAIT_NODE=$(
