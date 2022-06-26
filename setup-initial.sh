@@ -103,10 +103,7 @@ echo '::endgroup::'
 echo '::group::container restart'
 
 LOG_PATH=$(docker inspect "${JENKINS_SERVICE_ID}" --format='{{.LogPath}}')
-echo ${LOG_PATH}
-if [ -f "${LOG_PATH}" ]; then
-  sudo truncate -s 0 "${LOG_PATH}"
-fi
+sudo truncate -s 0 "${LOG_PATH}" || :
 
 docker container restart "${JENKINS_SERVICE_ID}"
 # "${GITHUB_ACTION_PATH}/restart-and-wait.sh"
