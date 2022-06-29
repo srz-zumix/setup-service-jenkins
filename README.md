@@ -77,8 +77,8 @@ jobs:
         image: jenkins/jnlp-agent-jdk11
     steps:
     - name: clone
-      uses: actions/checkout@v2
-    - uses: srz-zumix/setup-service-jenkins@v1
+      uses: actions/checkout@v3
+    - uses: srz-zumix/setup-service-jenkins@v2
       with:
         name: jenkins
         nodes: |
