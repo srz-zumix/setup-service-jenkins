@@ -40,7 +40,7 @@ jobs:
         os: 
           - ubuntu-latest
           - windows-latest
-          - macos-latest]
+          - macos-latest
         version:
           - latest
           - lts
