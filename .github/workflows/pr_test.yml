@@ -35,13 +35,17 @@ jobs:
         jenkins-cli-groovyfile
 
   setup-jenkins-spec-javaopt-jcasc-path:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: 
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
         version:
           - latest
           - lts
           - lts-jdk11
+    runs-on: ${{ matrix.os }}
     services:
       jenkins:
         image: jenkins/jenkins:${{ matrix.version }}
