@@ -9,27 +9,33 @@ runs:
   using: "composite"
   steps:
     - name: $github
+      shell: bash
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: |
         echo "${GITHUB_CONTEXT}"
     - name: $job
+      shell: bash
       env:
         JOB_CONTEXT: ${{ toJson(job) }}
       run: |
         echo "${JOB_CONTEXT}"
     - name: $runner
+      shell: bash
       env:
         RUNNER_CONTEXT: ${{ toJson(runner) }}
       run: |
         echo "${RUNNER_CONTEXT}"
     - name: ENV
+      shell: bash
       run: |
         env
     - name: ENV (GITHUB_)
+      shell: bash
       run: |
         env | grep GITHUB_ | sort
     - name: Inputs
+      shell: bash
       env:
         INPUTS_CONTEXT: ${{ toJson(inputs) }}
       run: |
