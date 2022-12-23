@@ -18,7 +18,7 @@ jobs:
           - 8080:8080
           - 50000:50000
     steps:
-    - uses: srz-zumix/setup-service-jenkins@v2
+    - uses: srz-zumix/setup-service-jenkins@main
       with:
         name: jenkins
         plugins: |
