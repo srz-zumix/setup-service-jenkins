@@ -86,7 +86,7 @@ runs:
       run: |
         jenkins-credential -c UsernamePasswordCredentials -i github_token -- -u x-access-token -p ${{ inputs.github_token }}
     - name: Launch cleanup action
-      uses: "./resources/post-action"
+      uses: "${{ env.GITHUB_ACTION_PATH }}/resources/post-action"
       if: "inputs.nodes != ''"
     - name: Setup Jenkins nodes
       shell: bash
