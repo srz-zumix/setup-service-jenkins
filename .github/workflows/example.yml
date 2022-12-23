@@ -1,0 +1,27 @@
+name: Example
+on:
+  push:
+
+jobs:
+  setup-jenkins-default:
+    runs-on: ubuntu-latest
+    services:
+      jenkins:
+        image: jenkins/jenkins:latest
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        # env:
+        #   # disable setup wizard
+        #   JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+        ports:
+          - 8080:8080
+          - 50000:50000
+    steps:
+    - uses: srz-zumix/setup-service-jenkins@v2
+      with:
+        name: jenkins
+        plugins: |
+          job-dsl
+          workflow-job
+        jcasc_path: testdata/jcasc

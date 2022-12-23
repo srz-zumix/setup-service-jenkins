@@ -75,27 +75,32 @@ runs:
         inputs.install_suggested_plugins == 'true'
     - name: Setup JCasC
       shell: bash
-      if: "inputs.jcasc_path != ''"
       env: 
         JCASC_PATH: ${{ inputs.jcasc_path }}
       run: |
         "${GITHUB_ACTION_PATH}/setup-jcasc.sh"
+      if: "inputs.jcasc_path != ''"
     - name: Setup GitHub Token Credentials
       shell: bash
       if: "inputs.github_token != ''"
       run: |
         jenkins-credential -c UsernamePasswordCredentials -i github_token -- -u x-access-token -p ${{ inputs.github_token }}
+    - name: SetUp cleanup action
+      shell: bash
+      run: |
+        "${GITHUB_ACTION_PATH}/setup-cleanup-action.sh"
+      if: "inputs.nodes != ''"
     - name: Launch cleanup action
-      uses: "${{ env.GITHUB_ACTION_PATH }}/resources/post-action"
+      uses: "./.github/setup-service-jenkins/post-action"
       if: "inputs.nodes != ''"
     - name: Setup Jenkins nodes
       shell: bash
       env:
         JOB_SERVICES_CONTEXT_JSON: ${{ toJSON(job.services) }}
         JENKINS_NODES: ${{ inputs.nodes }}
-      if: "inputs.nodes != ''"
       run: |
         "${GITHUB_ACTION_PATH}/setup-nodes.sh"
+      if: "inputs.nodes != ''"
 
 branding:
   icon: 'settings'
