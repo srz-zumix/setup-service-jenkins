@@ -8,6 +8,32 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: $github
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "${GITHUB_CONTEXT}"
+    - name: $job
+      env:
+        JOB_CONTEXT: ${{ toJson(job) }}
+      run: |
+        echo "${JOB_CONTEXT}"
+    - name: $runner
+      env:
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+      run: |
+        echo "${RUNNER_CONTEXT}"
+    - name: ENV
+      run: |
+        env
+    - name: ENV (GITHUB_)
+      run: |
+        env | grep GITHUB_ | sort
+    - name: Inputs
+      env:
+        INPUTS_CONTEXT: ${{ toJson(inputs) }}
+      run: |
+        echo "${INPUTS_CONTEXT}"
     - name: jenkins log
       shell: bash
       run: |
