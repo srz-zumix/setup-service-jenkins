@@ -10,6 +10,9 @@ if (!instance.installState.isSetupComplete()) {
     instance.save()
 }
 
+println instance.getAuthorizationStrategy()
+println instance.getSecurityRealm()
+
 // def version = instance.getVersion()
 // new File("/usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state").text = version
 // new File("/usr/share/jenkins/ref/jenkins.install.InstallUtil.lastExecVersion").text = version
