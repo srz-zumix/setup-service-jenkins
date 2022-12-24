@@ -17,11 +17,18 @@ jobs:
         ports:
           - 8080:8080
           - 50000:50000
+      agent1:
+        image: jenkins/jnlp-agent-jdk11
     steps:
     - uses: srz-zumix/setup-service-jenkins@main
       with:
         name: jenkins
+        nodes: |
+          agent1
+          agent2
         plugins: |
           job-dsl
           workflow-job
-        jcasc_path: testdata/jcasc
+    - name: List online nodes
+      run: |
+        jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'
