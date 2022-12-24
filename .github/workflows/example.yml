@@ -21,7 +21,7 @@ jobs:
       agent1:
         image: jenkins/jnlp-agent-jdk11
     steps:
-    - uses: srz-zumix/setup-service-jenkins@main
+    - uses: srz-zumix/setup-service-jenkins@feature/fix_example
       with:
         name: jenkins
         nodes: |
