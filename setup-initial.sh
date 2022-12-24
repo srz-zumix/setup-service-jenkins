@@ -57,6 +57,8 @@ docker cp "${GITHUB_ACTION_PATH}/resources/init.groovy.d/setup-jenkins-init.groo
 docker cp "${TEMP}/jenkins-version.txt" "${JENKINS_SERVICE_ID}:${JENKINS_SHRE_REF}/jenkins.install.UpgradeWizard.state"
 docker cp "${TEMP}/jenkins-version.txt" "${JENKINS_SERVICE_ID}:${JENKINS_SHRE_REF}/jenkins.install.InstallUtil.lastExecVersion"
 
+docker exec "${JENKINS_SERVICE_ID}" ls -alhR "${JENKINS_SHRE_REF}"
+
 echo '::endgroup::'
 
 echo '::group::install tools'
