@@ -3,7 +3,7 @@ on:
   push:
 
 jobs:
-  setup-jenkins-default:
+  setup-jenkins-example:
     runs-on: ubuntu-latest
     services:
       jenkins:
@@ -12,9 +12,9 @@ jobs:
         credentials:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-        # env:
-        #   # disable setup wizard
-        #   JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+        env:
+          # disable setup wizard
+          JAVA_OPTS: -Djenkins.install.runSetupWizard=false
         ports:
           - 8080:8080
           - 50000:50000
