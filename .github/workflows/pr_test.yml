@@ -61,6 +61,7 @@ jobs:
     env:
       TEST_JOB: Test_GitHubToken
     steps:
+    - run: npm list -g
     - name: clone
       uses: actions/checkout@v3
     - name: Replace jcasc path
