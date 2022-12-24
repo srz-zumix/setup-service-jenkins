@@ -30,6 +30,7 @@ jobs:
         plugins: |
           job-dsl
           workflow-job
+        install_suggested_plugins: true
     - name: List online nodes
       run: |
         jenkins-cli-groovy 'jenkins.model.Jenkins.get().computers.findAll{ it.isOnline() }.each { println it.displayName }'
