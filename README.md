@@ -43,7 +43,7 @@ Optional. Jenkins node container names.
 
 ### `github_token`
 
-Optional. GITHUB_TOKEN add to jenkins credential. (id = github_token)
+Optional. GITHUB_TOKEN add to jenkins credential. (id = github_token) Default is `${{ github.token }}`.
 
 ## Example usage
 
