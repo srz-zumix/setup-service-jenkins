@@ -21,6 +21,7 @@ mv jenkins-cli.jar "${PREFIX}/jenkins-cli.jar"
 if docker exec "${JENKINS_SERVICE_ID}" test -f /opt/jenkins-plugin-manager.jar > /dev/null; then
   :
 else
+  echo "install jenkins-plugin-manager.jar"
   PLUGIN_CLI_DOWNLOAD_URL=$(curl -sSL "https://api.github.com/repos/jenkinsci/plugin-installation-manager-tool/releases/latest" | grep browser_download_url | grep jar | cut -d: -f2- | xargs echo)
   curl -sSOL "${PLUGIN_CLI_DOWNLOAD_URL}"
   mv jenkins-plugin-manager-*.jar "${PREFIX}/jenkins-plugin-manager.jar"
