@@ -1,6 +1,7 @@
 import java.io.*
 import jenkins.model.*
 import jenkins.install.*
+import hudson.security.*
 
 def instance = Jenkins.get()
 if (!instance.installState.isSetupComplete()) {
@@ -9,6 +10,10 @@ if (!instance.installState.isSetupComplete()) {
     InstallState.INITIAL_SETUP_COMPLETED.initializeState()
     instance.save()
 }
+
+instance.setAuthorizationStrategy(hudson.security.AuthorizationStrategy.UNSECURED)
+// println instance.getAuthorizationStrategy()
+// println instance.getSecurityRealm()
 
 // def version = instance.getVersion()
 // new File("/usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state").text = version
