@@ -1,6 +1,7 @@
 import java.io.*
 import jenkins.model.*
 import jenkins.install.*
+import hudson.security.*
 
 def instance = Jenkins.get()
 if (!instance.installState.isSetupComplete()) {
@@ -9,6 +10,8 @@ if (!instance.installState.isSetupComplete()) {
     InstallState.INITIAL_SETUP_COMPLETED.initializeState()
     instance.save()
 }
+
+println instance.setAuthorizationStrategy(hudson.security.AuthorizationStrategy.UNSECURED)
 
 println instance.getAuthorizationStrategy()
 println instance.getSecurityRealm()
