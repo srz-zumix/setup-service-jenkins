@@ -1,8 +1,10 @@
-build: dist/index.js dist/cleanup.js
+build: dist/main/index.js dist/post/index.js
 
-dist/index.js: src/index.js Makefile
-	ncc build src/index.js
+dist/main/index.js: src/index.js Makefile package-lock.json
+	npx ncc build $< -o dist/main
 
-dist/cleanup.js: src/cleanup.js Makefile
-	ncc build $< -o tmp
-	mv tmp/index.js $@
+dist/post/index.js: src/cleanup.js Makefile package-lock.json
+	npx ncc build $< -o dist/post
+
+package-lock.json: package.json
+	npm install
