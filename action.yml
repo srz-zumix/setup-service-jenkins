@@ -86,12 +86,17 @@ runs:
       run: |
         jenkins-credential -c UsernamePasswordCredentials -i github_token -- -u x-access-token -p ${{ inputs.github_token }}
     - name: SetUp cleanup action
-      shell: bash
-      run: |
-        "${GITHUB_ACTION_PATH}/setup-cleanup-action.sh"
-      if: "inputs.nodes != ''"
-    - name: Launch cleanup action
-      uses: "./.github/setup-service-jenkins/post-action"
+      uses: srz-zumix/post-run-action@v1
+      with:
+        post-run: |
+          for id in ${JENKINS_AGENT_IDS}; do
+            echo "::group::Print service container logs: ${id}"
+            docker logs --details "${id}"
+            echo '::endgroup::'
+            echo "::group::Stop and remove container: ${id}"
+            docker rm --force "${id}"
+            echo '::endgroup::'
+          done
       if: "inputs.nodes != ''"
     - name: Setup Jenkins nodes
       shell: bash

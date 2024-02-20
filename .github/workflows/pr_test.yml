@@ -17,7 +17,7 @@ jobs:
           - 50000:50000
     steps:
     - name: clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - uses: ./
       with:
         name: jenkins
@@ -63,7 +63,7 @@ jobs:
     steps:
     - run: npm list -g
     - name: clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Replace jcasc path
       run: |
         find testdata -name "*.yml" -print0 | xargs -0 sed -i -e "s|/var/jenkins_home/casc_configs|/casc_configs|g"
@@ -93,7 +93,7 @@ jobs:
       run: |
         jenkins-build-log "${TEST_JOB}"
       if: success() || failure()
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: test-result
         path: |
@@ -116,7 +116,7 @@ jobs:
           - 50000:50000
     steps:
     - name: clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - uses: ./
       with:
         name: jenkins
