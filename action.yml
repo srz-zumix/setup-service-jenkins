@@ -89,7 +89,7 @@ runs:
       uses: srz-zumix/post-run-action@v1
       with:
         post-run: |
-          for id in "${JENKINS_AGENT_IDS}"; do
+          for id in ${JENKINS_AGENT_IDS}; do
             echo "::group::Print service container logs: ${id}"
             docker logs --details "${id}"
             echo '::endgroup::'
